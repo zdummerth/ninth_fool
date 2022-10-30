@@ -6,20 +6,10 @@ import { GetStaticPropsResult } from 'next';
 import Image from 'next/image';
 import probe from 'probe-image-size';
 interface Props {
-  products: Product[];
   publicImages: any;
 }
 
-interface Image {
-  name: string;
-  id: string;
-  updated_at: Date;
-  created_at: Date;
-  last_accessed_at: Date;
-  metadata: any;
-}
-
-export default function PricingPage({ products, publicImages }: Props) {
+export default function PricingPage({ publicImages }: Props) {
   // console.log(publicImages);
   return (
     <div>
@@ -47,7 +37,7 @@ export default function PricingPage({ products, publicImages }: Props) {
 }
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
-  const products = await getActiveProductsWithPrices();
+  // const products = await getActiveProductsWithPrices();
   const { data, error } = await supabaseAdmin.storage
     .from('public-images')
     .list('', {
@@ -55,23 +45,30 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
       offset: 0
     });
 
-  const images = await Promise.all(
-    data
-      .filter((img) => img.name !== '.emptyFolderPlaceholder')
-      .map(async (i) => {
-        // console.log(i);
-        const imgData = await probe(
-          `https://iyepowyaftcjvbuntjts.supabase.co/storage/v1/object/public/public-images/${i.name}`
-        );
-        return { ...i, ...imgData };
-      })
-  );
+  if (data) {
+    const images = await Promise.all(
+      data
+        .filter((img) => img.name !== '.emptyFolderPlaceholder')
+        .map(async (i) => {
+          // console.log(i);
+          const imgData = await probe(
+            `https://iyepowyaftcjvbuntjts.supabase.co/storage/v1/object/public/public-images/${i.name}`
+          );
+          return { ...i, ...imgData };
+        })
+    );
 
-  return {
-    props: {
-      products,
-      publicImages: images
-    },
-    revalidate: 60
-  };
+    return {
+      props: {
+        publicImages: images
+      }
+      // revalidate: 60
+    };
+  } else {
+    return {
+      props: {
+        publicImages: []
+      }
+    };
+  }
 }
