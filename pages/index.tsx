@@ -3,35 +3,19 @@ import { getActiveProductsWithPrices } from 'utils/supabase-client';
 import { supabaseAdmin } from '@/utils/supabase-admin';
 import { Product } from 'types';
 import { GetStaticPropsResult } from 'next';
-import Image from 'next/image';
+import ImageList from '@/components/ImageList';
 import probe from 'probe-image-size';
 interface Props {
   publicImages: any;
 }
 
-export default function PricingPage({ publicImages }: Props) {
+export default function HomePage({ publicImages }: Props) {
   // console.log(publicImages);
   return (
     <div>
       {/* <Pricing products={products} /> */}
       <h1>The Ninth Fool</h1>
-      <div className="columns-2 w-full">
-        {publicImages
-          .filter((img: any) => img.name !== '.emptyFolderPlaceholder')
-          .map((img: any) => {
-            return (
-              <div className="relative w-full">
-                <Image
-                  src={img.url}
-                  layout="responsive"
-                  width={img.width}
-                  height={img.height}
-                  key={img.id}
-                />
-              </div>
-            );
-          })}
-      </div>
+      <ImageList images={publicImages} />
     </div>
   );
 }

@@ -12,6 +12,14 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
+const getSignedUrls = async (searchTerm: string) => {
+  const { data, error } = await supabaseAdmin.storage
+    .from('paid-images')
+    .list('', { limit: 25 });
+  if (error) throw error;
+  console.log(data, error);
+};
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,

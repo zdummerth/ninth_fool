@@ -9,7 +9,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 const Navbar = () => {
   const router = useRouter();
   const supabaseClient = useSupabaseClient();
-  const { user } = useUser();
+  const { user, subscription, isLoading } = useUser();
 
   return (
     <nav className={s.root}>
@@ -35,6 +35,15 @@ const Navbar = () => {
           </div>
 
           <div className="flex flex-1 justify-end space-x-8">
+            {user && !subscription ? (
+              <Link href="/pricing">
+                <a className={s.link}>Subscribe</a>
+              </Link>
+            ) : !isLoading ? (
+              <Link href="/feed">
+                <a className={s.link}>Feed</a>
+              </Link>
+            ) : null}
             {user ? (
               <span
                 className={s.link}

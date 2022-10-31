@@ -34,3 +34,8 @@ export const updateUserName = async (user: User, name: string) => {
     })
     .eq('id', user.id);
 };
+
+export const getImageTags = async () => {
+  const imagesTags = await supabase.from('paid-images').select('tags');
+  console.log(imagesTags);
+};
