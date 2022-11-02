@@ -8,6 +8,7 @@ import { postData } from 'utils/helpers';
 
 import { User } from '@supabase/supabase-js';
 import { withPageAuth } from '@supabase/auth-helpers-nextjs';
+import FileUploader from 'components/FileUploader';
 
 interface Props {
   title: string;
@@ -35,6 +36,7 @@ export default function Account() {
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
             Image uploader
           </h1>
+          <FileUploader />
         </div>
       </div>
     </section>

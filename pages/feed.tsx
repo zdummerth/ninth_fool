@@ -27,7 +27,7 @@ export default function FeedPage() {
       <div>There was an error loading images, please reload to try again.</div>
     );
   }
-  console.log(imageTags, imageTagError);
+  // console.log(imageTags, imageTagError);
   return (
     <div className="p-4">
       <div className="">
