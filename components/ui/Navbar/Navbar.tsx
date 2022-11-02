@@ -39,7 +39,7 @@ const Navbar = () => {
               <Link href="/pricing">
                 <a className={s.link}>Subscribe</a>
               </Link>
-            ) : !isLoading ? (
+            ) : user && subscription ? (
               <Link href="/feed">
                 <a className={s.link}>Feed</a>
               </Link>

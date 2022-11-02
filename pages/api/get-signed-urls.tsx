@@ -10,7 +10,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
       ? await supabase
           .from('paid-images')
           .select('filepath, tagstring')
-          .range(0, 10)
+          .range(0, 40)
           .order('created_at', { ascending: false })
       : await supabase
           .from('paid-images')

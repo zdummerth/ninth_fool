@@ -76,6 +76,7 @@ export default function FeedPage() {
                   <div className="flex flex-col gap-2 p-2">
                     {Object.keys(imageTags).map((t) => (
                       <button
+                        key={t}
                         onClick={() =>
                           setFeedArgs({
                             page: 1,
