@@ -10,6 +10,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
     .select('tagstring');
 
   if (error) {
+    console.log(error);
     return res.json(error);
   }
 
