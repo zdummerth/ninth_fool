@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 
 export default function Avatar() {
   const supabase = useSupabaseClient<any>();
-  const [avatarUrl, setAvatarUrl] = useState<any>(null);
-  const [imagePreview, setImagePreview] = useState<any>(null);
   const [image, setImage] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
 
   const { handleSubmit, register } = useForm();
-  //   useEffect(() => {
-  //     if (url) downloadImage(url);
-  //   }, [url]);
 
   const uploadImage: any = async (data: any) => {
     try {
-      // console.log(data);
       setUploading(true);
 
       let { error: uploadError } = await supabase.storage
@@ -40,8 +34,9 @@ export default function Avatar() {
         throw error;
       }
 
+      setImage(null);
+
       console.log('success uploading image');
-      //   onUpload(filePath);
     } catch (error) {
       alert('Error uploading avatar!');
       console.log(error);
@@ -80,8 +75,6 @@ export default function Avatar() {
     }
   };
 
-  console.log({ image });
-
   return (
     <div className="flex flex-col items-center">
       <div className="mb-8">
@@ -118,7 +111,9 @@ export default function Avatar() {
                 placeholder=""
                 {...register('tagstring', { required: true })}
               />
-              <button className="p-1 rounded border">Submit</button>
+              <button className="p-1 rounded border" disabled={uploading}>
+                Submit
+              </button>
             </div>
           </form>
         </>
