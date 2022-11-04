@@ -1,10 +1,8 @@
-import Pricing from 'components/Pricing';
-import { getActiveProductsWithPrices } from 'utils/supabase-client';
 import { supabaseAdmin } from '@/utils/supabase-admin';
-import { Product } from 'types';
 import { GetStaticPropsResult } from 'next';
-import ImageList from '@/components/ImageList';
-import probe from 'probe-image-size';
+import Image from 'next/image';
+import mobilebg from 'public/mobile-bg.png';
+import desktopbg from 'public/desktop-bg.png';
 interface Props {
   publicImages: any;
 }
@@ -14,8 +12,22 @@ export default function HomePage({ publicImages }: Props) {
   return (
     <div>
       {/* <Pricing products={products} /> */}
-      <h1>The Ninth Fool</h1>
-      <ImageList images={publicImages} />
+      {/* <h1>The Ninth Fool</h1> */}
+      <div className="lg:hidden">
+        <Image src={mobilebg} layout="responsive" placeholder="blur" />
+      </div>
+      <div className="hidden lg:block">
+        <Image src={desktopbg} layout="responsive" placeholder="blur" />
+      </div>
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        {publicImages.map((i: string) => {
+          return (
+            <div key={i} className="relative w-full aspect-[1/1]">
+              <Image src={i} layout="fill" objectFit="cover" />
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -30,17 +42,12 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
     });
 
   if (data) {
-    const images = await Promise.all(
-      data
-        .filter((img) => img.name !== '.emptyFolderPlaceholder')
-        .map(async (i) => {
-          // console.log(i);
-          const imgData = await probe(
-            `https://iyepowyaftcjvbuntjts.supabase.co/storage/v1/object/public/public-images/${i.name}`
-          );
-          return { ...i, ...imgData };
-        })
-    );
+    const images = data
+      .filter((img) => img.name !== '.emptyFolderPlaceholder')
+      .map((i) => {
+        // console.log(i);
+        return `https://iyepowyaftcjvbuntjts.supabase.co/storage/v1/object/public/public-images/${i.name}`;
+      });
 
     return {
       props: {

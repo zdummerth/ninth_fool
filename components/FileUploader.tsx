@@ -3,7 +3,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 
-export default function Avatar() {
+export default function FileUploader() {
   const supabase = useSupabaseClient<any>();
   const [image, setImage] = useState<any>(null);
   const [uploading, setUploading] = useState(false);
@@ -112,7 +112,7 @@ export default function Avatar() {
                 {...register('tagstring', { required: true })}
               />
               <button className="p-1 rounded border" disabled={uploading}>
-                Submit
+                {uploading ? 'Uploading ...' : 'Submit'}
               </button>
             </div>
           </form>

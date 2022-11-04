@@ -1,5 +1,4 @@
 import { withApiAuth } from '@supabase/auth-helpers-nextjs';
-import probe from 'probe-image-size';
 
 export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   // Run queries with RLS on the server
@@ -9,17 +8,17 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
     req.body.searchTerm === ''
       ? await supabase
           .from('paid-images')
-          .select('filepath, tagstring')
-          .range(0, 40)
+          .select('filepath, tagstring, width, height')
+          .range(0, 2)
           .order('created_at', { ascending: false })
       : await supabase
           .from('paid-images')
-          .select('filepath, tagstring')
+          .select('filepath, tagstring, width, height')
           .textSearch('tagstring', req.body.searchTerm, {
             type: 'phrase',
             config: 'english'
           })
-          .range(0, 10)
+          .range(0, 2)
           .order('created_at', { ascending: false });
 
   if (error) {
@@ -43,19 +42,11 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   }
 
   const urlArr = urls ? urls : [];
-  const imagesResults = await Promise.all(
-    urlArr.map(async (i) => {
-      // console.log(i);
-      const imgData = await probe(i.signedUrl);
-      return { ...i, ...imgData };
-    })
-  );
-
-  const imagesArray = Object.keys(imagesResults).map(
-    (k: any) => imagesResults[k]
-  );
-
-  //   console.log(imagesArray);
+  const imagesArray = urlArr.map((i) => {
+    // console.log(i);
+    const imgData = data.find((img) => i.signedUrl.includes(img.filepath));
+    return { ...i, ...imgData };
+  });
 
   return res.json({
     images: imagesArray

@@ -1,25 +1,29 @@
-import { User, withPageAuth } from '@supabase/auth-helpers-nextjs';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import useSWR from 'swr';
 import callApi from '@/utils/callApi';
 import { useState } from 'react';
 import ImageList from '@/components/ImageList';
-import { useForm } from 'react-hook-form';
-import FilterIcon from '@/components/icons/Filter';
-// import SearchIcon from '@/components/icons/Search';
-export default function FeedPage() {
+import SearchTags from '@/components/SearchTags';
+import LoadingDots from '@/components/ui/LoadingDots';
+
+import { GetServerSidePropsContext } from 'next';
+
+export default function FeedPage(props: any) {
+  console.log('feed mounted');
+  const imageTags = props.counts;
   const [feedArgs, setFeedArgs] = useState({
     page: 1,
-    searchTerm: '',
-    filterOpen: false
+    searchTerm: ''
   });
 
-  const { data: imageTags, error: imageTagError } = useSWR(
-    ['/api/get-image-tags'],
-    () => callApi('/api/get-image-tags', 'GET')
-  );
   const { data, error } = useSWR(
     ['/api/get-signed-urls', feedArgs.page, feedArgs.searchTerm],
-    () => callApi('/api/get-signed-urls', 'POST', feedArgs)
+    () => callApi('/api/get-signed-urls', 'POST', feedArgs),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false
+    }
   );
 
   if (error) {
@@ -27,82 +31,36 @@ export default function FeedPage() {
       <div>There was an error loading images, please reload to try again.</div>
     );
   }
-  // console.log(imageTags, imageTagError);
+
   return (
-    <div className="p-4">
-      <div className="">
-        {/* <form
-          className="flex justify-center items-center my-4 w-full"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <input
-            className="bg-zinc-700 p-2 rounded mr-2"
-            placeholder="search images"
-            {...register('searchTerm', { required: true })}
+    <div className="p-2">
+      <div className="flex items-center my-4">
+        {imageTags && (
+          <SearchTags
+            counts={imageTags}
+            setTag={(t: string) => setFeedArgs({ page: 1, searchTerm: t })}
           />
-          <button>
-            <SearchIcon />
-          </button>
-        </form> */}
-        <button
-          className="ml-4 mb-4"
-          onClick={() => setFeedArgs({ ...feedArgs, filterOpen: true })}
-        >
-          <FilterIcon />
-        </button>
+        )}
         {feedArgs.searchTerm && (
-          <span className="flex w-fit border rounded p-2 my-8">
+          <span className="flex w-fit border rounded p-2 ml-8">
             <span className="mr-4">{feedArgs.searchTerm}</span>
             <button
               onClick={() =>
-                setFeedArgs({ ...feedArgs, filterOpen: false, searchTerm: '' })
+                setFeedArgs({
+                  ...feedArgs,
+                  searchTerm: ''
+                })
               }
             >
               X
             </button>
           </span>
         )}
-        {feedArgs.filterOpen && (
-          <div className="fixed z-40 left-0 top-0 w-screen h-screen bg-black/75 pt-20 flex justify-center items-center">
-            <div className="absolute h-3/4 w-3/4 bg-black">
-              <button
-                className="ml-5 mb-5 bg-black p-4"
-                onClick={() => setFeedArgs({ ...feedArgs, filterOpen: false })}
-              >
-                X
-              </button>
-              <div className="overflow-auto left-0 top-0 h-full w-full bg-black">
-                {imageTags && !imageTagError && (
-                  <div className="flex flex-col gap-2 p-2">
-                    {Object.keys(imageTags).map((t) => (
-                      <button
-                        key={t}
-                        onClick={() =>
-                          setFeedArgs({
-                            page: 1,
-                            searchTerm: t,
-                            filterOpen: false
-                          })
-                        }
-                        className={`flex justify-between rounded p-2 ${
-                          feedArgs.searchTerm === t
-                            ? 'border-emerald-400 border-4'
-                            : `border`
-                        }`}
-                      >
-                        <div className="mr-2">{t}</div>
-                        <div>({imageTags[t]})</div>
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
       {!data && !error ? (
-        <div>loading</div>
+        <div className="flex justify-center">
+          <LoadingDots />
+        </div>
       ) : (
         <ImageList images={data.images} />
       )}
@@ -110,6 +68,47 @@ export default function FeedPage() {
   );
 }
 
-export const getServerSideProps = withPageAuth({
-  redirectTo: '/'
-});
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
+  // Create authenticated Supabase Client
+
+  const supabase = createServerSupabaseClient(ctx);
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: '/',
+
+        permanent: false
+      }
+    };
+
+  // Run queries with RLS on the server
+
+  const { data, error } = await supabase
+    .from('paid-images')
+    .select('tagstring');
+
+  if (error) {
+    console.log(error);
+  }
+
+  const tagsArray = data
+    ? data.map((t) => t.tagstring.split(',').map((t1: any) => t1.trim())).flat()
+    : [];
+
+  const counts: any = {};
+
+  for (const tag of tagsArray) {
+    counts[tag] = counts[tag] ? counts[tag] + 1 : 1;
+  }
+
+  return {
+    props: {
+      counts: counts ?? []
+    }
+  };
+};

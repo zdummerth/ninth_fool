@@ -20,6 +20,27 @@ const getSignedUrls = async (searchTerm: string) => {
   console.log(data, error);
 };
 
+const getImageTags = async () => {
+  const { data, error } = await supabaseAdmin
+    .from('paid-images')
+    .select('tagstring');
+
+  if (error) {
+    throw error;
+  }
+
+  const tagsArray = data
+    ? data.map((t) => t.tagstring.split(',').map((t1: any) => t1.trim())).flat()
+    : [];
+
+  const counts: any = {};
+
+  for (const tag of tagsArray) {
+    counts[tag] = counts[tag] ? counts[tag] + 1 : 1;
+  }
+  return counts;
+};
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
@@ -188,5 +209,6 @@ export {
   upsertPriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
+  getImageTags,
   supabaseAdmin
 };

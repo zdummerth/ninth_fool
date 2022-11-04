@@ -43,7 +43,9 @@ export default function Layout({ children, meta: pageMeta }: Props) {
         <meta name="twitter:image" content={meta.cardImage} />
       </Head>
       <Navbar />
-      <main id="skip">{children}</main>
+      <main className="min-h-screen" id="skip">
+        {children}
+      </main>
       <Footer />
     </>
   );
