@@ -8,6 +8,9 @@ import { postData } from 'utils/helpers';
 
 import { User } from '@supabase/supabase-js';
 import { withPageAuth } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/router';
+
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 interface Props {
   title: string;
@@ -36,6 +39,8 @@ export const getServerSideProps = withPageAuth({ redirectTo: '/signin' });
 export default function Account({ user }: { user: User }) {
   const [loading, setLoading] = useState(false);
   const { isLoading, subscription, userDetails } = useUser();
+  const supabaseClient = useSupabaseClient();
+  const router = useRouter();
 
   const redirectToCustomerPortal = async () => {
     setLoading(true);
@@ -109,24 +114,6 @@ export default function Account({ user }: { user: User }) {
           </div>
         </Card>
         <Card
-          title="Your Name"
-          description="Please enter your full name, or a display name you are comfortable with."
-          footer={<p>Please use 64 characters at maximum.</p>}
-        >
-          <div className="text-xl mt-8 mb-4 font-semibold">
-            {userDetails ? (
-              `${
-                userDetails.full_name ??
-                `${userDetails.first_name} ${userDetails.last_name}`
-              }`
-            ) : (
-              <div className="h-8 mb-6">
-                <LoadingDots />
-              </div>
-            )}
-          </div>
-        </Card>
-        <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
           footer={<p>We will email you to verify the change.</p>}
@@ -135,6 +122,15 @@ export default function Account({ user }: { user: User }) {
             {user ? user.email : undefined}
           </p>
         </Card>
+      </div>
+      <div
+        className="text-center"
+        onClick={async () => {
+          await supabaseClient.auth.signOut();
+          router.push('/signin');
+        }}
+      >
+        Sign out
       </div>
     </section>
   );

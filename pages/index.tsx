@@ -1,6 +1,9 @@
 import { supabaseAdmin } from '@/utils/supabase-admin';
 import { GetStaticPropsResult } from 'next';
+import { useUser } from 'utils/useUser';
+
 import Image from 'next/image';
+import Link from 'next/link';
 import mobilebg from 'public/mobile-bg.png';
 import desktopbg from 'public/desktop-bg.png';
 interface Props {
@@ -9,6 +12,10 @@ interface Props {
 
 export default function HomePage({ publicImages }: Props) {
   // console.log(publicImages);
+  const { user, subscription, isLoading } = useUser();
+
+  const linkClassName =
+    'block p-2 my-8 w-64 rounded-xl text-center shadow shadow-white bg-emerald-500 color black';
   return (
     <div>
       {/* <Pricing products={products} /> */}
@@ -19,14 +26,34 @@ export default function HomePage({ publicImages }: Props) {
       <div className="hidden lg:block">
         <Image src={desktopbg} layout="responsive" placeholder="blur" />
       </div>
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mx-2">
         {publicImages.map((i: string) => {
           return (
-            <div key={i} className="relative w-full aspect-[1/1]">
+            <div
+              key={i}
+              className="relative w-full aspect-[1/1] rounded-xl overflow-hidden"
+            >
               <Image src={i} layout="fill" objectFit="cover" />
             </div>
           );
         })}
+      </div>
+      <div className="flex justify-center">
+        {user && subscription && !isLoading && (
+          <Link href="/feed">
+            <a className={linkClassName}>View More Images</a>
+          </Link>
+        )}
+        {user && !subscription && !isLoading && (
+          <Link href="/pricing">
+            <a className={linkClassName}>Subscribe For More Images</a>
+          </Link>
+        )}
+        {!user && !isLoading && (
+          <Link href="/signin">
+            <a className={linkClassName}>Sign Up For More Images</a>
+          </Link>
+        )}
       </div>
     </div>
   );

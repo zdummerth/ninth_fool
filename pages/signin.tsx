@@ -24,6 +24,12 @@ const SignIn = () => {
   const user = useUser();
   const supabaseClient = useSupabaseClient();
 
+  const priceString = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'usd',
+    minimumFractionDigits: 0
+  }).format(399 / 100);
+
   const handleSignin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -78,8 +84,12 @@ const SignIn = () => {
     return (
       <div className="flex justify-center height-screen-helper">
         <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
-          <div className="flex justify-center pb-12 ">
-            <Logo width="64px" height="64px" />
+          <div className="text-center">
+            <span className="text-5xl font-extrabold white">{priceString}</span>
+            <span className="text-base font-medium text-zinc-100">/month</span>
+            <div className="my-8">
+              For Commercial Access To Even More Images
+            </div>
           </div>
           <div className="flex flex-col space-y-4">
             {message.content && (
