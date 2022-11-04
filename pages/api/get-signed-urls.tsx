@@ -44,7 +44,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   const urlArr = urls ? urls : [];
   const imagesArray = urlArr.map((i) => {
     // console.log(i);
-    const imgData = data.find((img) => i.signedUrl.includes(img.filepath));
+    const imgData = data?.find((img) => i.signedUrl.includes(img.filepath));
     return { ...i, ...imgData };
   });
 
