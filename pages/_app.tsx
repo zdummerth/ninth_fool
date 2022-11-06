@@ -19,14 +19,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   }, []);
 
   return (
-    <div className="bg-black">
-      <SessionContextProvider supabaseClient={supabaseClient}>
-        <MyUserContextProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </MyUserContextProvider>
-      </SessionContextProvider>
-    </div>
+    <React.StrictMode>
+      <div className="bg-black">
+        <SessionContextProvider supabaseClient={supabaseClient}>
+          <MyUserContextProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </MyUserContextProvider>
+        </SessionContextProvider>
+      </div>
+    </React.StrictMode>
   );
 }

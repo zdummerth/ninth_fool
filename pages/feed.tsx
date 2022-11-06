@@ -1,28 +1,37 @@
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
-import useSWR from 'swr';
+import useSWRInfinite from 'swr/infinite';
 import callApi from '@/utils/callApi';
 import { useState } from 'react';
 import ImageList from '@/components/ImageList';
 import SearchTags from '@/components/SearchTags';
 import LoadingDots from '@/components/ui/LoadingDots';
+import { useRouter } from 'next/router';
 
 import { GetServerSidePropsContext } from 'next';
 
 export default function FeedPage(props: any) {
-  console.log('feed mounted');
   const imageTags = props.counts;
+  const router = useRouter();
   const [feedArgs, setFeedArgs] = useState({
-    page: 1,
     searchTerm: ''
   });
 
-  const { data, error } = useSWR(
-    ['/api/get-signed-urls', feedArgs.page, feedArgs.searchTerm],
-    () => callApi('/api/get-signed-urls', 'POST', feedArgs),
+  const getKey = (pageIndex: any, previousPageData: any) => {
+    if (previousPageData && !previousPageData.images.length) return null; // reached the end
+
+    return `/api/get-signed-urls?page=${pageIndex}${
+      feedArgs.searchTerm ? `&searchTerm=${feedArgs.searchTerm}` : ''
+    }`;
+  };
+
+  const { data, size, setSize, error } = useSWRInfinite(
+    getKey,
+    (key) => callApi(key, 'POST', feedArgs),
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
-      revalidateOnReconnect: false
+      revalidateOnReconnect: false,
+      initialSize: 1
     }
   );
 
@@ -32,25 +41,36 @@ export default function FeedPage(props: any) {
     );
   }
 
+  const newdata = data ? data : [];
+  const allImages = newdata.map((d) => d.images).flat();
+
+  // console.log('feed data: ', data);
+
   return (
     <div className="p-2">
-      <div className="flex items-center my-4">
+      <div className="hidden" id="top" />
+      <div className="flex items-center p-4 w-full sticky top-0 bg-black z-40 transition-all duration-150">
         {imageTags && (
           <SearchTags
             counts={imageTags}
-            setTag={(t: string) => setFeedArgs({ page: 1, searchTerm: t })}
+            setTag={(t: string) => {
+              setFeedArgs({ searchTerm: t });
+              setSize(1);
+              router.push('#top');
+            }}
           />
         )}
         {feedArgs.searchTerm && (
           <span className="flex w-fit border rounded p-2 ml-8">
             <span className="mr-4">{feedArgs.searchTerm}</span>
             <button
-              onClick={() =>
+              onClick={() => {
                 setFeedArgs({
-                  ...feedArgs,
                   searchTerm: ''
-                })
-              }
+                });
+                setSize(1);
+                router.push('#top');
+              }}
             >
               X
             </button>
@@ -62,7 +82,21 @@ export default function FeedPage(props: any) {
           <LoadingDots />
         </div>
       ) : (
-        <ImageList images={data.images} />
+        <>
+          {allImages.length > 0 && <ImageList images={allImages} />}
+          {allImages.length < newdata[0]?.count && (
+            <div className="flex justify-center">
+              <div>
+                <button
+                  className="border py-1 px-3 rounded"
+                  onClick={() => setSize(size + 1)}
+                >
+                  {!data && !error ? <LoadingDots /> : 'Load More'}
+                </button>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

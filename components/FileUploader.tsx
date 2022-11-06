@@ -35,10 +35,8 @@ export default function FileUploader() {
       }
 
       setImage(null);
-
-      console.log('success uploading image');
     } catch (error) {
-      alert('Error uploading avatar!');
+      alert(error);
       console.log(error);
     } finally {
       setUploading(false);

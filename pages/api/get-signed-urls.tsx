@@ -2,24 +2,33 @@ import { withApiAuth } from '@supabase/auth-helpers-nextjs';
 
 export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   // Run queries with RLS on the server
-  //   console.log('in get signed urls function', req.body);
+  console.log('in get signed urls function', req.query);
+  const pageIndex: any = req.query.page;
+  const limit = 10;
+  const start = pageIndex * limit;
+  const end = start + limit - 1;
 
-  const { data, error } =
-    req.body.searchTerm === ''
-      ? await supabase
-          .from('paid-images')
-          .select('filepath, tagstring, width, height')
-          .range(0, 2)
-          .order('created_at', { ascending: false })
-      : await supabase
-          .from('paid-images')
-          .select('filepath, tagstring, width, height')
-          .textSearch('tagstring', req.body.searchTerm, {
-            type: 'phrase',
-            config: 'english'
-          })
-          .range(0, 2)
-          .order('created_at', { ascending: false });
+  const { data, error, statusText, count, status } = !req.query.searchTerm
+    ? await supabase
+        .from('paid-images')
+        .select('filepath, tagstring, width, height', {
+          count: 'exact',
+          head: false
+        })
+        .range(start, end)
+        .order('created_at', { ascending: false })
+    : await supabase
+        .from('paid-images')
+        .select('filepath, tagstring, width, height', {
+          count: 'exact',
+          head: false
+        })
+        .textSearch('tagstring', req.body.searchTerm, {
+          type: 'phrase',
+          config: 'english'
+        })
+        .range(start, end)
+        .order('created_at', { ascending: false });
 
   if (error) {
     return res.json(error);
@@ -49,6 +58,8 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   });
 
   return res.json({
+    statusText,
+    count,
     images: imagesArray
   });
 });
