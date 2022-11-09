@@ -4,7 +4,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   // Run queries with RLS on the server
   console.log('in get signed urls function', req.query);
   const pageIndex: any = req.query.page;
-  const limit = process.env.NODE_ENV === 'development' ? 1 : 50;
+  const limit = process.env.NODE_ENV === 'development' ? 5 : 50;
   const start = pageIndex * limit;
   const end = start + limit - 1;
 
