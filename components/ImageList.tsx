@@ -28,10 +28,13 @@ export default function ImageList({ images }: Props) {
       <div className="columns-1 md:columns-2 lg:columns-3 gap-4 w-full">
         {images
           .filter((img: any) => img.name !== '.emptyFolderPlaceholder')
-          .map((img: any) => {
+          .map((img: any, ind: any) => {
+            console.log(ind % 2);
             return (
               <div
-                className="relative w-full mb-4 rounded-xl overflow-hidden"
+                className={`relative w-full mb-4 rounded-xl overflow-hidden ${
+                  ind % 2 === 1 && 'break-after-right'
+                }`}
                 key={img.signedUrl}
               >
                 <Image
@@ -43,8 +46,8 @@ export default function ImageList({ images }: Props) {
                   blurDataURL={`data:image/svg+xml;base64,${toBase64(
                     shimmer(img.width, img.height)
                   )}`}
-                  key={img.id ? img.id : img.url}
                 />
+                {/* <div className="absolute top-0 left-0 bg-black">{ind}</div> */}
               </div>
             );
           })}

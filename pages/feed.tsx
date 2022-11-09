@@ -24,13 +24,14 @@ export default function FeedPage(props: any) {
     }`;
   };
 
-  const { data, size, setSize, error } = useSWRInfinite(
+  const { data, size, setSize, error, isValidating } = useSWRInfinite(
     getKey,
     (key) => callApi(key, 'POST', feedArgs),
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
+      revalidateFirstPage: false,
       initialSize: 1
     }
   );
@@ -82,21 +83,19 @@ export default function FeedPage(props: any) {
           <LoadingDots />
         </div>
       ) : (
-        <>
-          {allImages.length > 0 && <ImageList images={allImages} />}
-          {allImages.length < newdata[0]?.count && (
-            <div className="flex justify-center">
-              <div>
-                <button
-                  className="border py-1 px-3 rounded"
-                  onClick={() => setSize(size + 1)}
-                >
-                  {!data && !error ? <LoadingDots /> : 'Load More'}
-                </button>
-              </div>
-            </div>
-          )}
-        </>
+        <>{allImages.length > 0 && <ImageList images={allImages} />}</>
+      )}
+      {allImages.length < newdata[0]?.count && (
+        <div className="flex justify-center">
+          <div>
+            <button
+              className="border w-[125px] px-3 rounded"
+              onClick={() => setSize(size + 1)}
+            >
+              {isValidating ? <LoadingDots /> : 'Load More'}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
