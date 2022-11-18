@@ -29,7 +29,6 @@ export default function ImageList({ images }: Props) {
     const currentIndex = images.findIndex(
       (img: any) => img.signedUrl === enlargerImg.signedUrl
     );
-    console.log({ action, currentIndex });
     let ind = 0;
     switch (currentIndex) {
       case 0:

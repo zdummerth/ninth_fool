@@ -11,7 +11,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
   const { data, error, statusText, count, status } = !req.query.searchTerm
     ? await supabase
         .from('paid-images')
-        .select('filepath, tagstring, width, height', {
+        .select('id, filepath, tagstring, width, height', {
           count: 'exact',
           head: false
         })
@@ -19,7 +19,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
         .order('created_at', { ascending: false })
     : await supabase
         .from('paid-images')
-        .select('filepath, tagstring, width, height', {
+        .select('id, filepath, tagstring, width, height', {
           count: 'exact',
           head: false
         })

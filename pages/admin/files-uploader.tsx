@@ -23,8 +23,18 @@ export const getServerSideProps = withPageAuth({
     // Run queries with RLS on the server
     // const { data } = await supabase.from('test').select('*');
     const user = await supabase.auth.getUser();
-    console.log(user);
-    return { props: { data: 'test' } };
+    if (
+      user?.data?.user?.email &&
+      user?.data?.user?.email === process.env.ADMIN_EMAIL
+    ) {
+      return { props: { data: 'test' } };
+    }
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
   }
 });
 
