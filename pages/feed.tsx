@@ -83,7 +83,11 @@ export default function FeedPage(props: any) {
           <LoadingDots />
         </div>
       ) : (
-        <>{allImages.length > 0 && <ImageList images={allImages} />}</>
+        <>
+          {allImages.length > 0 && (
+            <ImageList showForm={false} images={allImages} />
+          )}
+        </>
       )}
       {allImages.length < newdata[0]?.count && (
         <div className="flex justify-center">

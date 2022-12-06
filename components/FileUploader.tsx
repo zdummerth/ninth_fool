@@ -101,6 +101,16 @@ export default function FileUploader() {
               objectFit="contain"
             />
           </div>
+          <div>
+            <span className="mr-4">
+              <span className="mr-2">Height:</span>
+              <span>{image.height}</span>
+            </span>
+            <span>
+              <span className="mr-2">Width:</span>
+              <span>{image.width}</span>
+            </span>
+          </div>
           <form className="my-4 w-full" onSubmit={handleSubmit(uploadImage)}>
             <label htmlFor="tagstring">Seperate tags by comma</label>
             <div className="flex">

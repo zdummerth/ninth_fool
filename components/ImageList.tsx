@@ -2,7 +2,10 @@ import Image from 'next/image';
 import { useState } from 'react';
 interface Props {
   images: any;
+  showForm: boolean;
+  setImage?: any;
 }
+import MasonryLayout from './Masonry';
 
 const shimmer = (w: number, h: number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -23,7 +26,11 @@ const toBase64 = (str: string) =>
     ? Buffer.from(str).toString('base64')
     : window.btoa(str);
 
-export default function ImageList({ images }: Props) {
+export default function ImageList({
+  images,
+  showForm = false,
+  setImage
+}: Props) {
   const [enlargerImg, setEnlargedImg] = useState<any>(null);
   const handleImgChange = (action = 'next') => {
     const currentIndex = images.findIndex(
@@ -60,7 +67,23 @@ export default function ImageList({ images }: Props) {
             </button>
           </div>
 
-          <div>
+          {showForm ? (
+            <>
+              <div className="relative w-full h-1/2">
+                <Image
+                  src={enlargerImg.signedUrl}
+                  layout="fill"
+                  objectFit="contain"
+                  // width={enlargerImg.width}
+                  // height={enlargerImg.height}
+                  placeholder="blur"
+                  blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                    shimmer(enlargerImg.width, enlargerImg.height)
+                  )}`}
+                />
+              </div>
+            </>
+          ) : (
             <Image
               src={enlargerImg.signedUrl}
               layout="fill"
@@ -72,17 +95,17 @@ export default function ImageList({ images }: Props) {
                 shimmer(enlargerImg.width, enlargerImg.height)
               )}`}
             />
-          </div>
+          )}
         </div>
       )}
-      <div className="columns-1 md:columns-2 lg:columns-3 gap-4 w-full">
+      <MasonryLayout>
         {images
           .filter((img: any) => img.name !== '.emptyFolderPlaceholder')
           .map((img: any, ind: any) => {
             return (
               <button
-                onClick={() => setEnlargedImg(img)}
-                className={`relative w-full mb-4 rounded-xl overflow-hidden ${
+                onClick={() => (setImage ? setImage(img) : setEnlargedImg(img))}
+                className={`relative w-full mb-[5px] rounded-xl overflow-hidden ${
                   ind % 2 === 1 && 'break-after-right'
                 }`}
                 key={img.signedUrl}
@@ -97,11 +120,10 @@ export default function ImageList({ images }: Props) {
                     shimmer(img.width, img.height)
                   )}`}
                 />
-                {/* <div className="absolute top-0 left-0 bg-black">{ind}</div> */}
               </button>
             );
           })}
-      </div>
+      </MasonryLayout>
     </div>
   );
 }

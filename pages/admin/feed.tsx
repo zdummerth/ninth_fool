@@ -1,53 +1,25 @@
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import useSWR, { useSWRConfig } from 'swr';
 import useSWRInfinite from 'swr/infinite';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
-
 import callApi from '@/utils/callApi';
 import { useState } from 'react';
+import ImageList from '@/components/ImageList';
+import Image from 'next/image';
 import ImageForm from '@/components/ImageForm';
 import SearchTags from '@/components/SearchTags';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { useRouter } from 'next/router';
-import Image from 'next/image';
 
 import { GetServerSidePropsContext } from 'next';
 
 export default function FeedPage(props: any) {
   const imageTags = props.counts;
-  const supabase = useSupabaseClient<any>();
-
   const router = useRouter();
   const [feedArgs, setFeedArgs] = useState<any>({
     searchTerm: '',
     imageForm: null,
     loading: false
   });
-
-  const handleSubmit: any = async (data: any) => {
-    // console.log(data);
-    // console.log(feedArgs.imageForm);
-    try {
-      setFeedArgs({ ...feedArgs, loading: true });
-
-      const res = await callApi('/api/update-image', 'POST', {
-        id: feedArgs.imageForm.id,
-        tagstring: data.tagstring
-      });
-
-      if (res.error) {
-        throw res.error;
-      }
-
-      console.log(res);
-
-      alert('success');
-    } catch (error) {
-      // alert(error);
-      console.log(error);
-    } finally {
-      setFeedArgs({ ...feedArgs, loading: false });
-    }
-  };
 
   const getKey = (pageIndex: any, previousPageData: any) => {
     if (previousPageData && !previousPageData.images.length) return null; // reached the end
@@ -57,7 +29,7 @@ export default function FeedPage(props: any) {
     }`;
   };
 
-  const { data, size, setSize, error, isValidating } = useSWRInfinite(
+  const { data, size, setSize, error, isValidating, mutate } = useSWRInfinite(
     getKey,
     (key) => callApi(key, 'POST', feedArgs),
     {
@@ -78,7 +50,42 @@ export default function FeedPage(props: any) {
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
 
-  // console.log('feed data: ', allImages[0]);
+  console.log('feed data: ', allImages);
+
+  const handleSubmit: any = async (data: any) => {
+    try {
+      setFeedArgs({ ...feedArgs, loading: true });
+
+      const res = await callApi('/api/update-image', 'POST', {
+        id: feedArgs.imageForm.id,
+        tagstring: data.tagstring
+      });
+
+      if (res.error) {
+        throw res.error;
+      }
+      console.log(res);
+      mutate((prev: any) => {
+        const newimages = allImages.map((img: any) => {
+          if (img.id === feedArgs.imageForm.id)
+            return {
+              ...img,
+              tagstring: data.tagstring
+            };
+          return img;
+        });
+        // return newimages;
+        // console.log(updated);
+        console.log(prev);
+        return prev;
+      });
+      alert('success');
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setFeedArgs({ ...feedArgs, loading: false });
+    }
+  };
 
   return (
     <div className="p-2">
@@ -88,7 +95,7 @@ export default function FeedPage(props: any) {
           <SearchTags
             counts={imageTags}
             setTag={(t: string) => {
-              setFeedArgs({ searchTerm: t, imageForm: null });
+              setFeedArgs({ searchTerm: t });
               setSize(1);
               router.push('#top');
             }}
@@ -100,8 +107,7 @@ export default function FeedPage(props: any) {
             <button
               onClick={() => {
                 setFeedArgs({
-                  searchTerm: '',
-                  imageForm: null
+                  searchTerm: ''
                 });
                 setSize(1);
                 router.push('#top');
@@ -118,19 +124,15 @@ export default function FeedPage(props: any) {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mx-2">
-            {allImages.map((i: any) => {
-              return (
-                <button
-                  key={i.signedUrl}
-                  onClick={() => setFeedArgs({ ...feedArgs, imageForm: i })}
-                  className="relative w-full aspect-[1/1] rounded-xl overflow-hidden"
-                >
-                  <Image src={i.signedUrl} layout="fill" objectFit="cover" />
-                </button>
-              );
-            })}
-          </div>
+          {allImages.length > 0 && (
+            <ImageList
+              setImage={(img: any) =>
+                setFeedArgs((prev: any) => ({ ...prev, imageForm: img }))
+              }
+              showForm={false}
+              images={allImages}
+            />
+          )}
         </>
       )}
       {allImages.length < newdata[0]?.count && (
@@ -145,7 +147,6 @@ export default function FeedPage(props: any) {
           </div>
         </div>
       )}
-
       {feedArgs.imageForm && (
         <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-black">
           <button
@@ -185,16 +186,29 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const {
     data: { session }
   } = await supabase.auth.getSession();
-  // console.log(session);
 
-  if (!session || session.user.email !== process.env.ADMIN_EMAIL)
+  if (!session)
     return {
       redirect: {
         destination: '/',
-
         permanent: false
       }
     };
+
+  const user = await supabase.auth.getUser();
+  if (
+    !(
+      user?.data?.user?.email &&
+      user?.data?.user?.email === process.env.ADMIN_EMAIL
+    )
+  ) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    };
+  }
 
   // Run queries with RLS on the server
 
