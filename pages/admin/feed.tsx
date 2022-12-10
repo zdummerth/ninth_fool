@@ -50,12 +50,12 @@ export default function FeedPage(props: any) {
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
 
-  console.log('feed data: ', allImages);
+  console.log(allImages[0]?.tagstring);
+
+  // console.log('feed data: ', allImages);
 
   const handleSubmit: any = async (data: any) => {
     try {
-      setFeedArgs({ ...feedArgs, loading: true });
-
       const res = await callApi('/api/update-image', 'POST', {
         id: feedArgs.imageForm.id,
         tagstring: data.tagstring
@@ -64,26 +64,34 @@ export default function FeedPage(props: any) {
       if (res.error) {
         throw res.error;
       }
-      console.log(res);
-      mutate((prev: any) => {
-        const newimages = allImages.map((img: any) => {
-          if (img.id === feedArgs.imageForm.id)
+
+      mutate(
+        (prev: any) => {
+          const newpages = prev.map((page: any) => {
+            const newimages = page.images.map((img: any) => {
+              if (img.id === feedArgs.imageForm.id) {
+                const newimage = {
+                  ...img,
+                  ...data
+                };
+
+                return newimage;
+              }
+              return img;
+            });
             return {
-              ...img,
-              tagstring: data.tagstring
+              ...prev,
+              images: newimages
             };
-          return img;
-        });
-        // return newimages;
-        // console.log(updated);
-        console.log(prev);
-        return prev;
-      });
-      alert('success');
+          });
+
+          return newpages;
+        },
+        { revalidate: false }
+      );
+      console.log('success');
     } catch (error) {
       console.log(error);
-    } finally {
-      setFeedArgs({ ...feedArgs, loading: false });
     }
   };
 
@@ -148,14 +156,14 @@ export default function FeedPage(props: any) {
         </div>
       )}
       {feedArgs.imageForm && (
-        <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-black">
+        <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-black overflow-auto">
           <button
             className="p-4"
             onClick={() => setFeedArgs({ ...feedArgs, imageForm: null })}
           >
             X
           </button>
-          <div className="relative w-full aspect-[1/1] rounded-xl overflow-hidden">
+          <div className="relative w-1/2 aspect-[1/1] rounded-xl overflow-hidden mx-auto">
             <Image
               src={feedArgs.imageForm.signedUrl}
               layout="fill"

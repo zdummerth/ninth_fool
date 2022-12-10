@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 interface DefaultValue {
@@ -11,11 +11,17 @@ interface Props {
   loading: boolean;
 }
 
-export default function ImageForm({ onSubmit, loading, defaultValues }: Props) {
+export default function ImageForm({ onSubmit, defaultValues }: Props) {
   const { handleSubmit, register } = useForm({ defaultValues });
+  const [loading, setLoading] = useState(false);
+  const submitWrapper = async (data: any) => {
+    setLoading(true);
+    await onSubmit(data);
+    setLoading(false);
+  };
 
   return (
-    <form className="w-full max-w-xl" onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-full max-w-xl" onSubmit={handleSubmit(submitWrapper)}>
       <div>
         <label htmlFor="tagstring" className="block p-2">
           Seperate tags by comma
