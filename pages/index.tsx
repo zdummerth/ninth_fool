@@ -5,7 +5,9 @@ import { useUser } from 'utils/useUser';
 import Image from 'next/image';
 import Link from 'next/link';
 import mobilebg from 'public/mobile-bg.png';
-import desktopbg from 'public/desktop-bg.png';
+// import desktopbg from 'public/desktop-bg.png';
+import desktopbg from 'public/bg.svg';
+
 interface Props {
   publicImages: any;
 }
@@ -24,7 +26,9 @@ export default function HomePage({ publicImages }: Props) {
         <Image src={mobilebg} layout="responsive" placeholder="blur" />
       </div>
       <div className="hidden lg:block">
-        <Image src={desktopbg} layout="responsive" placeholder="blur" />
+        <Image src={desktopbg} layout="responsive" 
+        // placeholder="blur" 
+        />
       </div>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mx-2">
         {publicImages.map((i: string) => {
