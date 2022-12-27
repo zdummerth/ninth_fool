@@ -1,24 +1,18 @@
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
-import useSWR, { useSWRConfig } from 'swr';
 import useSWRInfinite from 'swr/infinite';
 import callApi from '@/utils/callApi';
 import { useState } from 'react';
-import ImageList from '@/components/ImageList';
-import Image from 'next/image';
-import ImageForm from '@/components/ImageForm';
+import AdminImageList from '@/components/AdminImageList';
 import SearchTags from '@/components/SearchTags';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { useRouter } from 'next/router';
-
 import { GetServerSidePropsContext } from 'next';
 
 export default function FeedPage(props: any) {
   const imageTags = props.counts;
   const router = useRouter();
   const [feedArgs, setFeedArgs] = useState<any>({
-    searchTerm: '',
-    imageForm: null,
-    loading: false
+    searchTerm: ''
   });
 
   const getKey = (pageIndex: any, previousPageData: any) => {
@@ -29,7 +23,7 @@ export default function FeedPage(props: any) {
     }`;
   };
 
-  const { data, size, setSize, error, isValidating, mutate } = useSWRInfinite(
+  const { data, size, setSize, error, isValidating } = useSWRInfinite(
     getKey,
     (key) => callApi(key, 'POST', feedArgs),
     {
@@ -50,50 +44,7 @@ export default function FeedPage(props: any) {
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
 
-  console.log(allImages[0]?.tagstring);
-
-  // console.log('feed data: ', allImages);
-
-  const handleSubmit: any = async (data: any) => {
-    try {
-      const res = await callApi('/api/update-image', 'POST', {
-        id: feedArgs.imageForm.id,
-        tagstring: data.tagstring
-      });
-
-      if (res.error) {
-        throw res.error;
-      }
-
-      mutate(
-        (prev: any) => {
-          const newpages = prev.map((page: any) => {
-            const newimages = page.images.map((img: any) => {
-              if (img.id === feedArgs.imageForm.id) {
-                const newimage = {
-                  ...img,
-                  ...data
-                };
-
-                return newimage;
-              }
-              return img;
-            });
-            return {
-              ...prev,
-              images: newimages
-            };
-          });
-
-          return newpages;
-        },
-        { revalidate: false }
-      );
-      console.log('success');
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // console.log(allImages[0]?.tagstring);
 
   return (
     <div className="p-2">
@@ -131,17 +82,7 @@ export default function FeedPage(props: any) {
           <LoadingDots />
         </div>
       ) : (
-        <>
-          {allImages.length > 0 && (
-            <ImageList
-              setImage={(img: any) =>
-                setFeedArgs((prev: any) => ({ ...prev, imageForm: img }))
-              }
-              showForm={false}
-              images={allImages}
-            />
-          )}
-        </>
+        <>{allImages.length > 0 && <AdminImageList images={allImages} />}</>
       )}
       {allImages.length < newdata[0]?.count && (
         <div className="flex justify-center">
@@ -152,33 +93,6 @@ export default function FeedPage(props: any) {
             >
               {isValidating ? <LoadingDots /> : 'Load More'}
             </button>
-          </div>
-        </div>
-      )}
-      {feedArgs.imageForm && (
-        <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-black overflow-auto">
-          <button
-            className="p-4"
-            onClick={() => setFeedArgs({ ...feedArgs, imageForm: null })}
-          >
-            X
-          </button>
-          <div className="relative w-1/2 aspect-[1/1] rounded-xl overflow-hidden mx-auto">
-            <Image
-              src={feedArgs.imageForm.signedUrl}
-              layout="fill"
-              objectFit="contain"
-            />
-          </div>
-          <div className="m-2">
-            <ImageForm
-              onSubmit={handleSubmit}
-              loading={feedArgs.loading}
-              defaultValues={{
-                tagstring: feedArgs.imageForm.tagstring,
-                caption: feedArgs.imageForm.tagstring
-              }}
-            />
           </div>
         </div>
       )}

@@ -8,7 +8,6 @@ interface DefaultValue {
 interface Props {
   onSubmit: any;
   defaultValues: DefaultValue;
-  loading: boolean;
 }
 
 export default function ImageForm({ onSubmit, defaultValues }: Props) {
