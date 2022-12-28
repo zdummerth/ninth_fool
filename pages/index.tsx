@@ -4,7 +4,7 @@ import { useUser } from 'utils/useUser';
 import Image from 'next/image';
 import Link from 'next/link';
 import mobilebg from 'public/mobile-bg.png';
-import desktopbg from 'public/bg.svg';
+import desktopbg from 'public/desktop-bg.png';
 
 interface Props {
   publicImages: string[];

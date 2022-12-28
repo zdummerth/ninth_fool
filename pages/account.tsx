@@ -6,7 +6,6 @@ import Button from 'components/ui/Button';
 import { useUser } from 'utils/useUser';
 import { postData } from 'utils/helpers';
 
-import { User } from '@supabase/supabase-js';
 import { withPageAuth } from '@supabase/auth-helpers-nextjs';
 import { useRouter } from 'next/router';
 
@@ -36,9 +35,9 @@ function Card({ title, description, footer, children }: Props) {
 
 export const getServerSideProps = withPageAuth({ redirectTo: '/signin' });
 
-export default function Account({ user }: { user: User }) {
+export default function Account() {
   const [loading, setLoading] = useState(false);
-  const { isLoading, subscription, userDetails } = useUser();
+  const { isLoading, subscription, user } = useUser();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
 
@@ -115,8 +114,8 @@ export default function Account({ user }: { user: User }) {
         </Card>
         <Card
           title="Your Email"
-          description="Please enter the email address you want to use to login."
-          footer={<p>We will email you to verify the change.</p>}
+          // description="Please enter the email address you want to use to login."
+          // footer={<p>We will email you to verify the change.</p>}
         >
           <p className="text-xl mt-8 mb-4 font-semibold">
             {user ? user.email : undefined}

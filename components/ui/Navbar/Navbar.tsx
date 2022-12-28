@@ -1,48 +1,47 @@
 import Link from 'next/link';
-import s from './Navbar.module.css';
-
-import Logo from 'components/icons/Logo';
-import { useRouter } from 'next/router';
 import { useUser } from 'utils/useUser';
-import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import logoSvg from 'public/logo-white.svg';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 const Navbar = () => {
-  const router = useRouter();
-  const supabaseClient = useSupabaseClient();
   const { user, subscription, isLoading } = useUser();
+  const router = useRouter();
+  const linkClassName = 'px-3 py-1 rounded bg-black/90';
+  const navClassname =
+    router.pathname === '/'
+      ? 'absolute top-0 left-0 z-20 w-full bg-transparent'
+      : '';
 
   return (
-    <nav>
-      <a href="#skip" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
+    <nav className={navClassname}>
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
             <Link href="/">
-              <a className={s.logo} aria-label="Logo">
-                <Logo />
+              <a className={`w-12`} aria-label="Logo">
+                <Image src={logoSvg} layout="responsive" priority />
               </a>
             </Link>
           </div>
 
-          <div className="flex flex-1 justify-end space-x-8">
-            {user && !subscription ? (
+          <div className="space-x-8">
+            {user && !subscription && !isLoading ? (
               <Link href="/pricing">
-                <a className={s.link}>Subscribe</a>
+                <a className={linkClassName}>Subscribe</a>
               </Link>
             ) : user && subscription ? (
               <Link href="/feed">
-                <a className={s.link}>Feed</a>
+                <a className={linkClassName}>Feed</a>
               </Link>
             ) : null}
             {user ? (
               <Link href="/account">
-                <a className={s.link}>Account</a>
+                <a className={linkClassName}>Account</a>
               </Link>
             ) : (
               <Link href="/signin">
-                <a className={s.link}>Sign in</a>
+                <a className={linkClassName}>Sign in</a>
               </Link>
             )}
           </div>
