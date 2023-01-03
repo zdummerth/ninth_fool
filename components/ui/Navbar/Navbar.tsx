@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useUser } from 'utils/useUser';
-import logoSvg from 'public/logo-white.svg';
+import logoSvg from 'public/logo-white-2.png';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 

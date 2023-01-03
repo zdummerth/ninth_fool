@@ -3,14 +3,12 @@ import useSWRInfinite from 'swr/infinite';
 import callApi from '@/utils/callApi';
 import { useState } from 'react';
 import ImageList from '@/components/ImageList';
-import SearchTags from '@/components/SearchTags';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { useRouter } from 'next/router';
-
+import SearchTags from '@/components/SearchTags';
 import { GetServerSidePropsContext } from 'next';
 
 export default function FeedPage(props: any) {
-  const imageTags = props.counts;
   const router = useRouter();
   const [feedArgs, setFeedArgs] = useState({
     searchTerm: ''
@@ -45,37 +43,21 @@ export default function FeedPage(props: any) {
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
 
-  // console.log('feed data: ', data);
+  // console.log('tags: ', props.tags);
 
   return (
     <div className="p-2">
       <div className="hidden" id="top" />
       <div className="flex items-center p-4 w-full sticky top-0 bg-black z-40 transition-all duration-150">
-        {imageTags && (
+        {props.tags && (
           <SearchTags
-            counts={imageTags}
-            setTag={(t: string) => {
+            counts={props.counts}
+            setTag={(t: any) => {
               setFeedArgs({ searchTerm: t });
               setSize(1);
               router.push('#top');
             }}
           />
-        )}
-        {feedArgs.searchTerm && (
-          <span className="flex w-fit border rounded p-2 ml-8">
-            <span className="mr-4">{feedArgs.searchTerm}</span>
-            <button
-              onClick={() => {
-                setFeedArgs({
-                  searchTerm: ''
-                });
-                setSize(1);
-                router.push('#top');
-              }}
-            >
-              X
-            </button>
-          </span>
         )}
       </div>
       {!data && !error ? (
@@ -143,9 +125,15 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     counts[tag] = counts[tag] ? counts[tag] + 1 : 1;
   }
 
+  const tags = Object.keys(counts).map((t) => ({
+    name: t,
+    count: counts[t]
+  }));
+
   return {
     props: {
-      counts: counts ?? []
+      counts: counts ?? [],
+      tags: tags.length > 0 ? tags : []
     }
   };
 };

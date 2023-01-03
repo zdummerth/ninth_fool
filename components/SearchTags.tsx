@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import FilterIcon from '@/components/icons/Filter';
+import SearchIcon from '@/components/icons/Search';
 
 export default function SearchTags(props: any) {
   const imageTags = props.counts;
@@ -8,21 +8,8 @@ export default function SearchTags(props: any) {
 
   return (
     <>
-      {/* <form
-          className="flex justify-center items-center my-4 w-full"
-          onSubmit={handleSubmit(onSubmit)}
-        >
-          <input
-            className="bg-zinc-700 p-2 rounded mr-2"
-            placeholder="search images"
-            {...register('searchTerm', { required: true })}
-          />
-          <button>
-            <SearchIcon />
-          </button>
-        </form> */}
       <button className="p-2" onClick={() => setIsOpen(true)}>
-        <FilterIcon />
+        <SearchIcon />
       </button>
 
       {isOpen && (
