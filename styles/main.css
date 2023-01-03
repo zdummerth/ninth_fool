@@ -55,7 +55,6 @@ a {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: masonry;
-
 }
 
 .masonry-item {
@@ -64,16 +63,27 @@ a {
 }
 
 /* Re-order items into 3 rows */
-.masonry-item:nth-child(3n+1) { order: 1; }
-.masonry-item:nth-child(3n+2) { order: 2; }
-.masonry-item:nth-child(3n)   { order: 3; }
+.masonry-item:nth-child(3n + 1) {
+  order: 1;
+}
+.masonry-item:nth-child(3n + 2) {
+  order: 2;
+}
+.masonry-item:nth-child(3n) {
+  order: 3;
+}
 
 /* Force new columns */
 .masonry-container::before,
 .masonry-container::after {
-  content: "";
+  content: '';
   flex-basis: 100%;
   width: 0;
   order: 2;
 }
 
+/* #react-select-11-input {
+  outline: none !important;
+  width: 0;
+  box-shadow: none;
+} */

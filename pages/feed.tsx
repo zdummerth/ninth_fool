@@ -6,6 +6,7 @@ import ImageList from '@/components/ImageList';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { useRouter } from 'next/router';
 import SearchTags from '@/components/SearchTags';
+import SearchTagsAlt from '@/components/SearchTagsAlt';
 import { GetServerSidePropsContext } from 'next';
 
 export default function FeedPage(props: any) {
@@ -50,13 +51,21 @@ export default function FeedPage(props: any) {
       <div className="hidden" id="top" />
       <div className="flex items-center p-4 w-full sticky top-0 bg-black z-40 transition-all duration-150">
         {props.tags && (
-          <SearchTags
-            counts={props.counts}
-            setTag={(t: any) => {
-              setFeedArgs({ searchTerm: t });
-              setSize(1);
-              router.push('#top');
-            }}
+          // <SearchTags
+          //   counts={props.counts}
+          //   setTag={(t: any) => {
+          //     setFeedArgs({ searchTerm: t });
+          //     setSize(1);
+          //     router.push('#top');
+          //   }}
+          // />
+          <SearchTagsAlt
+          // counts={props.counts}
+          // setTag={(t: any) => {
+          //   setFeedArgs({ searchTerm: t });
+          //   setSize(1);
+          //   router.push('#top');
+          // }}
           />
         )}
       </div>
