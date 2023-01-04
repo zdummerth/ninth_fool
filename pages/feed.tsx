@@ -60,12 +60,12 @@ export default function FeedPage(props: any) {
           //   }}
           // />
           <SearchTagsAlt
-          // counts={props.counts}
-          // setTag={(t: any) => {
-          //   setFeedArgs({ searchTerm: t });
-          //   setSize(1);
-          //   router.push('#top');
-          // }}
+            tags={props.tags}
+            setTag={(t: any) => {
+              setFeedArgs({ searchTerm: t });
+              setSize(1);
+              router.push('#top');
+            }}
           />
         )}
       </div>
@@ -136,7 +136,9 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   const tags = Object.keys(counts).map((t) => ({
     name: t,
-    count: counts[t]
+    count: counts[t],
+    value: t,
+    label: `${t}  (${counts[t]})`
   }));
 
   return {
