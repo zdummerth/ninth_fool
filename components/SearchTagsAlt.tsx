@@ -17,20 +17,12 @@ export default ({ tags, setTag }: any) => {
 
           menu: () => 'border rounded bg-black'
         }}
-        // classNamePrefix="select"
-        // defaultValue={tags[0]}
-        // isDisabled={isDisabled}
-        // isLoading={isLoading}
         placeholder="...Search Images"
         isClearable={true}
-        // isRtl={isRtl}
         isSearchable={true}
         name="color"
         options={tags}
-        onChange={(tag: any) => {
-          const value = tag ? tag.value : '';
-          setTag(value);
-        }}
+        onChange={(tag: any) => setTag(tag ? tag.value : '')}
         unstyled
       />
     </>
