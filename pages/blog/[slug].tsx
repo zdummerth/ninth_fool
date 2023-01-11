@@ -3,6 +3,8 @@
 import { serialize } from 'next-mdx-remote/serialize';
 import { getPostBySlug, getAllPosts } from 'utils/markdown-helpers';
 import { MDXRemote } from 'next-mdx-remote';
+import Image from 'next/image';
+
 type Props = {
   post: any;
 };
@@ -12,13 +14,32 @@ export default function Post({ post }: Props) {
   //   if (!router.isFallback && !post?.slug) {
   //     return <ErrorPage statusCode={404} />;
   //   }
-  console.log(post.frontmatter);
   return (
-    <div>
+    <>
       <div>
-        <MDXRemote {...post} />
+        <div className="relative w-full group-hover:scale-125 transition ease-in-out">
+          <Image
+            src={post.frontmatter.featured_image}
+            alt={post.frontmatter.title}
+            width={300}
+            height={200}
+            layout="responsive"
+          />
+        </div>
+        <div className="p-2">
+          <MDXRemote {...post} />
+        </div>
       </div>
-    </div>
+      <style>
+        {`
+          h1 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+        `}
+      </style>
+    </>
   );
 }
 
