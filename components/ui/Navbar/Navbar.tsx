@@ -3,9 +3,11 @@ import { useUser } from 'utils/useUser';
 import logoSvg from 'public/logo-white-2.png';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import usePostsMeta from '@/utils/usePostsMeta';
 
 const Navbar = () => {
   const { user, subscription, isLoading } = useUser();
+  const { data: postData, error: postError } = usePostsMeta();
   const router = useRouter();
   const linkClassName = 'px-3 py-1 rounded bg-black/90';
   const navClassname =
@@ -35,6 +37,9 @@ const Navbar = () => {
                 <a className={linkClassName}>Feed</a>
               </Link>
             ) : null}
+            <Link href="/blog">
+              <a className={linkClassName}>Blog</a>
+            </Link>
             {user ? (
               <Link href="/account">
                 <a className={linkClassName}>Account</a>
