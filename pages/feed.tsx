@@ -44,7 +44,7 @@ export default function FeedPage(props: any) {
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
 
-  // console.log('tags: ', props.tags);
+  console.log('image ', allImages[0]);
 
   return (
     <div className="p-2">

@@ -8,8 +8,13 @@ import LoadingDots from '@/components/ui/LoadingDots';
 import { useRouter } from 'next/router';
 import { GetServerSidePropsContext } from 'next';
 
-export default function FeedPage(props: any) {
-  const imageTags = props.counts;
+//Tags have any type because object is generated from tags list
+interface Props {
+  tags: any;
+}
+
+export default function FeedPage(props: Props) {
+  const imageTags = props.tags;
   const router = useRouter();
   const [feedArgs, setFeedArgs] = useState<any>({
     searchTerm: ''
@@ -43,8 +48,6 @@ export default function FeedPage(props: any) {
 
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
-
-  // console.log(allImages[0]?.tagstring);
 
   return (
     <div className="p-2">
@@ -101,8 +104,6 @@ export default function FeedPage(props: any) {
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
-  // Create authenticated Supabase Client
-
   const supabase = createServerSupabaseClient(ctx);
 
   const {
@@ -132,8 +133,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
 
-  // Run queries with RLS on the server
-
   const { data, error } = await supabase
     .from('paid-images')
     .select('tagstring');
@@ -154,7 +153,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   return {
     props: {
-      counts: counts ?? []
+      tags: counts ?? []
     }
   };
 };

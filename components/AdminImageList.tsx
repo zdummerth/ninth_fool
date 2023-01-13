@@ -1,9 +1,10 @@
 import Image from 'next/image';
 import ImageForm from '@/components/ImageForm';
 import callApi from '@/utils/callApi';
+import { PaidImage } from 'types';
 
 interface Props {
-  images: any;
+  images: PaidImage[];
 }
 import MasonryLayout from './Masonry';
 
@@ -27,11 +28,11 @@ const toBase64 = (str: string) =>
     : window.btoa(str);
 
 export default function ImageList({ images }: Props) {
-  const handleSubmit: any = async (data: any, id: any) => {
+  const handleSubmit = async (tagstring: string, id: number) => {
     try {
       const res = await callApi('/api/update-image', 'POST', {
         id: id,
-        tagstring: data.tagstring
+        tagstring: tagstring
       });
 
       if (res.error) {
@@ -42,13 +43,14 @@ export default function ImageList({ images }: Props) {
       console.log(error);
     }
   };
+
+  // console.log(images.map((i) => i.name));
   return (
     <div>
       <MasonryLayout>
         {images
-          .filter((img: any) => img.name !== '.emptyFolderPlaceholder')
-          .map((img: any, ind: any) => {
-            if (ind === 0) console.log(img.tagstring);
+          // .filter((img: PaidImage) => img.name !== '.emptyFolderPlaceholder')
+          .map((img: PaidImage, ind: number) => {
             return (
               <div key={img.signedUrl}>
                 <div
@@ -67,12 +69,11 @@ export default function ImageList({ images }: Props) {
                 </div>
                 <div className="m-2">
                   <ImageForm
-                    onSubmit={async (data: any) => {
-                      await handleSubmit(data, img.id);
+                    onSubmit={async (data: { tagstring: string }) => {
+                      await handleSubmit(data.tagstring, img.id);
                     }}
                     defaultValues={{
-                      tagstring: img.tagstring,
-                      caption: img.tagstring
+                      tagstring: img.tagstring
                     }}
                   />
                 </div>

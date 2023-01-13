@@ -68,3 +68,21 @@ export interface Subscription {
   trial_end?: string;
   prices?: Price;
 }
+
+export interface BlogPostMetaData {
+  tags: string[];
+  title: string;
+  featured_image: string;
+  slug: string;
+}
+
+export interface PaidImage {
+  id: number;
+  filepath: string;
+  signedUrl: string;
+  path: string;
+  signedURL: string;
+  tagstring: string;
+  height: number;
+  width: number;
+}

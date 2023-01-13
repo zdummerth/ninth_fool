@@ -16,13 +16,13 @@ export default function Post({ post }: Props) {
   //   }
   return (
     <>
-      <div>
-        <div className="relative w-full group-hover:scale-125 transition ease-in-out">
+      <div className="max-w-2xl m-auto">
+        <div className="relative w-full">
           <Image
             src={post.frontmatter.featured_image}
             alt={post.frontmatter.title}
-            width={300}
-            height={200}
+            width={1536}
+            height={1024}
             layout="responsive"
           />
         </div>

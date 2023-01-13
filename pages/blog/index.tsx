@@ -3,24 +3,26 @@ import { serialize } from 'next-mdx-remote/serialize';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { BlogPostMetaData } from 'types';
+
 type Props = {
-  posts: any;
-  tags: any;
+  posts: BlogPostMetaData[];
+  tags: string[];
 };
 
-const PostCard = ({ p }: any) => {
+const PostCard = ({ post }: { post: BlogPostMetaData }) => {
   return (
-    <Link href={`/blog/${p.slug}`}>
+    <Link href={`/blog/${post.slug}`}>
       <a className="relative w-full group block border overflow-hidden rounded">
         <div className="absolute top-0 w-full p-2 bg-black/75 z-10 text-center">
-          {p.title}
+          {post.title}
         </div>
         <div className="relative w-full group-hover:scale-125 transition ease-in-out">
           <Image
-            src={p.featured_image}
-            alt={p.title}
-            width={300}
-            height={200}
+            src={post.featured_image}
+            alt={post.title}
+            width={1536}
+            height={1024}
             layout="responsive"
           />
         </div>
@@ -32,9 +34,9 @@ const PostCard = ({ p }: any) => {
 export default function PostIndex({ posts, tags }: Props) {
   return (
     <div>
-      <div className="grid grid-cols-1 gap-2 mx-2">
-        {posts.map((p: any) => (
-          <PostCard key={p.title} p={p} />
+      <div className="grid grid-cols-1 gap-2 mx-2 lg:grid-cols-2">
+        {posts.map((post: BlogPostMetaData) => (
+          <PostCard key={post.title} post={post} />
         ))}
       </div>
     </div>
