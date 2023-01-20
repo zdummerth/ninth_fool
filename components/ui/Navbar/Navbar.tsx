@@ -4,6 +4,7 @@ import logoSvg from 'public/logo-white-2.png';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import usePostsMeta from '@/utils/usePostsMeta';
+import Cart from 'components/Cart';
 
 const Navbar = () => {
   const { user, subscription, isLoading } = useUser();
@@ -27,7 +28,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="space-x-8">
+          <div className="flex space-x-8">
             {user && !subscription && !isLoading ? (
               <Link href="/pricing">
                 <a className={linkClassName}>Subscribe</a>
@@ -40,6 +41,9 @@ const Navbar = () => {
             <Link href="/blog">
               <a className={linkClassName}>Blog</a>
             </Link>
+            <div className={linkClassName}>
+              <Cart />
+            </div>
             {user ? (
               <Link href="/account">
                 <a className={linkClassName}>Account</a>

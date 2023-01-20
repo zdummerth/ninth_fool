@@ -1,5 +1,5 @@
 module.exports = {
   images: {
-    domains: ['iyepowyaftcjvbuntjts.supabase.co']
+    domains: ['iyepowyaftcjvbuntjts.supabase.co', 'cdn.shopify.com']
   }
 };

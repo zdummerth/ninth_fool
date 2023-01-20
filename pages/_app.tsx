@@ -8,6 +8,9 @@ import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { AppProps } from 'next/app';
 import { MyUserContextProvider } from 'utils/useUser';
 import type { Database } from 'types_db';
+import CartContextProvider from '../context/CartContextProvider';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   const [supabaseClient] = useState(() =>
@@ -20,13 +23,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <React.StrictMode>
       <div className="bg-black">
-        <SessionContextProvider supabaseClient={supabaseClient}>
-          <MyUserContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </MyUserContextProvider>
-        </SessionContextProvider>
+        <CartContextProvider>
+          <SessionContextProvider supabaseClient={supabaseClient}>
+            <MyUserContextProvider>
+              <Layout>
+                <ToastContainer position="top-center" theme="dark" />
+                <Component {...pageProps} />
+              </Layout>
+            </MyUserContextProvider>
+          </SessionContextProvider>
+        </CartContextProvider>
       </div>
     </React.StrictMode>
   );
