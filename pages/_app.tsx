@@ -22,18 +22,16 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <React.StrictMode>
-      <div className="bg-black">
-        <CartContextProvider>
-          <SessionContextProvider supabaseClient={supabaseClient}>
-            <MyUserContextProvider>
-              <Layout>
-                <ToastContainer position="top-center" theme="dark" />
-                <Component {...pageProps} />
-              </Layout>
-            </MyUserContextProvider>
-          </SessionContextProvider>
-        </CartContextProvider>
-      </div>
+      <CartContextProvider>
+        <SessionContextProvider supabaseClient={supabaseClient}>
+          <MyUserContextProvider>
+            <Layout>
+              <ToastContainer position="top-center" theme="dark" />
+              <Component {...pageProps} />
+            </Layout>
+          </MyUserContextProvider>
+        </SessionContextProvider>
+      </CartContextProvider>
     </React.StrictMode>
   );
 }

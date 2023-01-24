@@ -18,7 +18,7 @@ const Navbar = () => {
 
   return (
     <nav className={navClassname}>
-      <div className="mx-auto max-w-6xl px-6">
+      <div className="mx-auto max-w-6xl px-4 ">
         <div className="flex justify-between align-center flex-row py-4 md:py-6 relative">
           <div className="flex flex-1 items-center">
             <Link href="/">
@@ -28,7 +28,7 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className="flex space-x-8">
+          <div className="flex space-x-2">
             {user && !subscription && !isLoading ? (
               <Link href="/pricing">
                 <a className={linkClassName}>Subscribe</a>
@@ -41,9 +41,6 @@ const Navbar = () => {
             <Link href="/blog">
               <a className={linkClassName}>Blog</a>
             </Link>
-            <div className={linkClassName}>
-              <Cart />
-            </div>
             {user ? (
               <Link href="/account">
                 <a className={linkClassName}>Account</a>
@@ -53,6 +50,9 @@ const Navbar = () => {
                 <a className={linkClassName}>Sign in</a>
               </Link>
             )}
+            <div className={linkClassName}>
+              <Cart />
+            </div>
           </div>
         </div>
       </div>

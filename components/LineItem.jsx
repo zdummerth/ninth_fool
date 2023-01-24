@@ -9,23 +9,23 @@ export default function LineItem({ lineItem }) {
   const { removeCartItems, updateCartItem } = useCart();
   const [loading, setLoading] = useState(false);
 
-  const handleSelectChange = async (e) => {
-    const qtyInt = parseInt(e.target.value);
-    try {
-      setLoading(true);
-      await updateCartItem([
-        {
-          id: lineItem.id,
-          merchandiseId: lineItem.merchandise.id,
-          quantity: qtyInt
-        }
-      ]);
-    } catch (e) {
-      console.log('error', e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleSelectChange = async (e) => {
+  //   const qtyInt = parseInt(e.target.value);
+  //   try {
+  //     setLoading(true);
+  //     await updateCartItem([
+  //       {
+  //         id: lineItem.id,
+  //         merchandiseId: lineItem.merchandise.id,
+  //         quantity: qtyInt
+  //       }
+  //     ]);
+  //   } catch (e) {
+  //     console.log('error', e);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleDelete = async () => {
     try {
@@ -42,11 +42,8 @@ export default function LineItem({ lineItem }) {
   };
 
   const { merchandise } = lineItem;
-  // console.log(merchandise);
   const imgSrc = merchandise.image?.src;
-  //   const qtyAvailble =
-  //     merchandise.quantityAvailable === 0 ? 100 : merchandise.quantityAvailable;
-  const availableForSaleArray = Array.from(Array(100).keys()).map((k) => k + 1);
+  // const availableForSaleArray = Array.from(Array(100).keys()).map((k) => k + 1);
 
   return (
     <div className="flex justify-between border rounded p-2">
@@ -60,7 +57,7 @@ export default function LineItem({ lineItem }) {
         </div>
         <div className="flex-col fai-fs">
           <div>{merchandise.product.title}</div>
-          <div className="font-size-sm">{merchandise.title}</div>
+          {/* <div className="font-size-sm">{merchandise.title}</div> */}
           <div>
             <Price price={merchandise.priceV2.amount} />
           </div>
@@ -73,7 +70,7 @@ export default function LineItem({ lineItem }) {
             delete
           </button>
         </div>
-        <div className="flex fai-c">
+        {/* <div className="flex fai-c">
           {loading ? (
             <div>...updating</div>
           ) : (
@@ -98,7 +95,7 @@ export default function LineItem({ lineItem }) {
               )}
             </>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

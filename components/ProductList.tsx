@@ -25,7 +25,7 @@ const getStyles = ({
   };
 
   const standard = {
-    container: `w-full grid grid-cols-9 gap-2`,
+    container: `w-full grid grid-cols-9 gap-2 center`,
     child: `relative border group bg-black aspect-[1/1] col-span-full sm:col-span-3 sm:row-span-3 hover:cursor-pointer
       ${enlarge_first && `first:sm:col-span-6 first:sm:row-span-6`}
       `,
