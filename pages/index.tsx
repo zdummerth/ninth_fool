@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import mobilebg from 'public/mobile-bg.png';
 import desktopbg from 'public/desktop-bg.png';
+import blackrose from 'public/black-rose.png';
 import { getProducts } from '@/utils/callShopify';
 import ProductList from '@/components/ProductList';
 
@@ -22,6 +23,7 @@ export default function HomePage({ publicImages, products }: Props) {
   return (
     <>
       <div className="fixed top-0 left-0 w-full">
+        <div className="absolute top-0 left-0 w-full h-full bg-black/90 z-10"></div>
         <Image
           src={mobilebg}
           layout="responsive"
@@ -38,12 +40,23 @@ export default function HomePage({ publicImages, products }: Props) {
         />
       </div>
       <div className="py-20 relative z-10">
-        <div className="text-center bg-black/90 m-8 rounded py-20">
-          <h1 className="text-3xl mb-8 font-bold">The Ninth Fool</h1>
-          <h2 className="text-xl">A Gallery of AI Generated Digital Art</h2>
+        <div className="relative text-center m-4 rounded overflow-hidden py-20">
+          <div className="absolute top-0 left-0 w-full h-full -z-20 ">
+            <Image
+              src={blackrose}
+              layout="fill"
+              objectFit="cover"
+              className=""
+              priority
+            />
+          </div>
+          <h1 className="text-3xl md:text-5xl mb-8 font-bold text-shadow-dark">
+            The Ninth Fool
+          </h1>
+          <h2 className="text-xl text-shadow-dark">Art Innovated</h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mx-8">
+        <div className="grid grid-cols-2 gap-4 mx-4">
           {publicImages.map((i: string) => {
             return (
               <div
@@ -72,10 +85,10 @@ export default function HomePage({ publicImages, products }: Props) {
             </Link>
           )}
         </div>
-        <div className="text-center bg-black/90 m-8 rounded py-10">
+        <div className="text-center dark-gradient rounded py-10 m-2">
           <h2 className="text-xl">Featured Downloads</h2>
         </div>
-        <div className="mx-8">
+        <div className="mx-2">
           <ProductList products={products} />
         </div>
       </div>
@@ -89,7 +102,7 @@ const H1 = ({ title }: any) => {
 
 export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
   const { data } = await supabaseAdmin.storage.from('public-images').list('', {
-    limit: 21,
+    limit: 9,
     offset: 0
   });
   const allProducts = await getProducts({ first: 5 });
