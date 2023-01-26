@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import mobilebg from 'public/mobile-bg.png';
 import desktopbg from 'public/desktop-bg.png';
-import blackrose from 'public/black-rose.png';
+import blackrose from 'public/brose.png';
 import { getProducts } from '@/utils/callShopify';
 import ProductList from '@/components/ProductList';
 
@@ -23,7 +23,7 @@ export default function HomePage({ publicImages, products }: Props) {
   return (
     <>
       <div className="fixed top-0 left-0 w-full">
-        <div className="absolute top-0 left-0 w-full h-full bg-black/90 z-10"></div>
+        <div className="absolute top-0 left-0 w-full h-full bg-black/80 z-10"></div>
         <Image
           src={mobilebg}
           layout="responsive"
