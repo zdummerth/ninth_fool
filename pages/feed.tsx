@@ -49,7 +49,7 @@ export default function FeedPage(props: any) {
   return (
     <div className="p-2">
       <div className="hidden" id="top" />
-      <div className="flex items-center p-4 w-full sticky top-0 bg-black z-40 transition-all duration-150">
+      <div className="flex items-center p-4 w-full sticky top-0 bg-black z-20 transition-all duration-150">
         {props.tags && (
           // <SearchTags
           //   counts={props.counts}
