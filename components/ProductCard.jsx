@@ -22,7 +22,8 @@ const VariantPicker = ({
   product,
   currentVariant,
   setCurrentVariant,
-  setCurrentImage
+  setCurrentImage,
+  showQuantity
 }) => {
   // console.log('product variants', product.variants.edges)
   const [isLoading, setIsLoading] = useState({
@@ -132,25 +133,27 @@ const VariantPicker = ({
 
       <div className="">
         <div>
-          <div className="flex flex-col">
-            <div className="">Quantity:</div>
-            <input
-              className="p-2 bg-black w-full mt-2"
-              type="number"
-              id="quantity"
-              name="quantity"
-              min="1"
-              value={qty}
-              onChange={handleChange}
-            />
-          </div>
+          {showQuantity && (
+            <div className="flex flex-col">
+              <div className="">Quantity:</div>
+              <input
+                className="p-2 bg-black w-full mt-2"
+                type="number"
+                id="quantity"
+                name="quantity"
+                min="1"
+                value={qty}
+                onChange={handleChange}
+              />
+            </div>
+          )}
 
           <div className="">
             <button
               type="submit"
               name="add_to_cart"
               id="add-to-cart"
-              className="p-2 border w-full mt-4"
+              className="p-2 border w-full mt-4 rounded bg-emerald-400 text-black font-bold shadow shadow-white"
               onClick={handleSubmit}
               disabled={isLoading.adding || isLoading.buying}
             >
@@ -161,7 +164,7 @@ const VariantPicker = ({
               type="submit"
               name="buy-now"
               id="buy-now"
-              className="p-2 border w-full my-4"
+              className="p-2 border w-full my-4 rounded"
               onClick={handleSubmit}
               disabled={isLoading.adding || isLoading.buying}
             >
@@ -246,6 +249,7 @@ const Product = ({ product, recommendedProducts }) => {
             currentVariant={currentVariant}
             setCurrentVariant={setCurrentVariant}
             setCurrentImage={setCurrentImage}
+            showQuantity={false}
           />
         ) : (
           <div className="text-xl border border-red-700 p-4 text-center">

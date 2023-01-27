@@ -20,32 +20,9 @@ export default function Footer() {
               </Link>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
-              <Link href="/">
+              <Link href="/blog">
                 <a className="text-white hover:text-zinc-200 transition ease-in-out duration-150">
-                  About
-                </a>
-              </Link>
-            </li>
-          </ul>
-        </div>
-        <div className="col-span-1 lg:col-span-2">
-          <ul className="flex flex-initial flex-col md:flex-1">
-            <li className="py-3 md:py-0 md:pb-4">
-              <p className="text-white font-bold hover:text-zinc-200 transition ease-in-out duration-150">
-                LEGAL
-              </p>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link href="/">
-                <a className="text-white hover:text-zinc-200 transition ease-in-out duration-150">
-                  Privacy Policy
-                </a>
-              </Link>
-            </li>
-            <li className="py-3 md:py-0 md:pb-4">
-              <Link href="/">
-                <a className="text-white hover:text-zinc-200 transition ease-in-out duration-150">
-                  Terms of Use
+                  Blog
                 </a>
               </Link>
             </li>

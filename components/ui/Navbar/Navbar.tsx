@@ -13,9 +13,9 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const linkClassName =
-    'px-3 py-3 md:py-1 border md:border-none flex justify-center';
+    'px-3 py-3 md:py-1 border-t last:border-b md:border-none flex justify-center';
   // const navClassname = router.pathname === '/' ? '' : '';
-  const navClassname = 'relative z-40 bg-black h-12';
+  const navClassname = 'relative z-40 bg-black h-16';
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -78,7 +78,7 @@ const Navbar = () => {
           <div
             className={`${
               !isOpen ? 'hidden' : 'flex flex-col'
-            } absolute top-12 w-full bg-black md:hidden`}
+            } absolute top-16 w-full bg-black md:hidden`}
           >
             {links}
           </div>
