@@ -14,7 +14,6 @@ const Navbar = () => {
   const router = useRouter();
   const linkClassName =
     'px-3 py-3 md:py-1 border-t last:border-b md:border-none flex justify-center';
-  const navClassname = 'relative z-40 bg-black h-16';
 
   const mobileRef = useRef<HTMLInputElement>(null);
   useOnClickOutside(mobileRef, () => setIsOpen(false));
@@ -62,7 +61,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav ref={mobileRef} className={navClassname}>
+      <nav ref={mobileRef} className="relative z-40 bg-black h-16">
         <div className="mx-auto max-w-6xl h-full">
           <div className="flex justify-between align-center flex-row h-full">
             <div className="flex items-center pl-4">
@@ -82,9 +81,9 @@ const Navbar = () => {
             </button>
 
             <div
-              className={`${
-                !isOpen ? 'right-[-100%]' : 'right-0'
-              } flex flex-col absolute top-16 w-3/4 h-screen bg-black md:hidden transition-all ease-in-out duration-500`}
+              className={`flex flex-col fixed top-16 w-3/4 h-screen bg-black md:hidden transition-all ease-in-out duration-500 overflow-hidden ${
+                !isOpen ? '-right-full' : 'right-0'
+              }`}
             >
               {links}
             </div>
