@@ -1,4 +1,4 @@
-import logoSvg from 'public/logo-white-2.png';
+import logoSvg from 'public/nf-logo.png';
 import Image from 'next/image';
 
 const Logo = () => {

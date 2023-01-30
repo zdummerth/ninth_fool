@@ -8,6 +8,8 @@ import desktopbg from 'public/desktop-bg.png';
 import blackrose from 'public/brose.png';
 import { getProducts } from '@/utils/callShopify';
 import ProductList from '@/components/ProductList';
+import Logo from 'components/ui/Logo';
+import Seo from '@/components/SEO';
 
 interface Props {
   publicImages: string[];
@@ -20,8 +22,19 @@ export default function HomePage({ publicImages, products }: Props) {
   const linkClassName =
     'block p-2 my-8 w-64 rounded-xl text-center shadow shadow-white bg-emerald-500 color black';
 
+  const description = `Unleash your inner artist and transform your space with endless
+            possibilities of art! With The Ninth Fool, you can have access to a
+            world-class collection of digital art prints that you can download
+            anytime, anywhere. Our membership program makes it easy and
+            affordable for you to decorate your home, office, or anywhere else
+            with stunning art pieces that will inspire and delight you. Say
+            goodbye to boring spaces and hello to a world filled with creativity
+            and beauty. Join The Ninth Fool today and start experiencing the
+            magic of art!`;
+
   return (
     <>
+      <Seo title="Home" description={description} />
       <div className="fixed top-0 left-0 w-full">
         <div className="absolute top-0 left-0 w-full h-full bg-black/80 z-10"></div>
         <Image
@@ -53,7 +66,9 @@ export default function HomePage({ publicImages, products }: Props) {
           <h1 className="text-3xl md:text-5xl mb-8 font-bold text-shadow-dark">
             The Ninth Fool
           </h1>
-          <h2 className="text-xl text-shadow-dark">Art Innovated</h2>
+          <h2 className="text-xl text-shadow-dark">
+            Experience the Magic of Art, Anytime, Anywhere
+          </h2>
         </div>
 
         <div className="grid grid-cols-2 gap-4 mx-4">
@@ -68,22 +83,29 @@ export default function HomePage({ publicImages, products }: Props) {
             );
           })}
         </div>
-        <div className="flex justify-center">
-          {user && subscription && !isLoading && (
-            <Link href="/feed">
-              <a className={linkClassName}>View More Images</a>
-            </Link>
-          )}
-          {user && !subscription && !isLoading && (
-            <Link href="/pricing">
-              <a className={linkClassName}>Subscribe For More Images</a>
-            </Link>
-          )}
-          {!user && !isLoading && (
-            <Link href="/signin">
-              <a className={linkClassName}>Sign Up For More Images</a>
-            </Link>
-          )}
+
+        <div className="flex flex-col items-center text-center dark-gradient rounded py-10 m-2">
+          <div className="relative w-48">
+            <Logo />
+          </div>
+          <p className="text-xl max-w-xl mx-auto mt-10">{description}</p>
+          <div className="flex justify-center">
+            {user && subscription && !isLoading && (
+              <Link href="/feed">
+                <a className={linkClassName}>View More Images</a>
+              </Link>
+            )}
+            {user && !subscription && !isLoading && (
+              <Link href="/pricing">
+                <a className={linkClassName}>Subscribe Now</a>
+              </Link>
+            )}
+            {!user && !isLoading && (
+              <Link href="/signin">
+                <a className={linkClassName}>Sign Up Now</a>
+              </Link>
+            )}
+          </div>
         </div>
         <div className="text-center dark-gradient rounded py-10 m-2">
           <h2 className="text-xl">Featured Downloads</h2>

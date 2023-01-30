@@ -7,6 +7,7 @@ import Cart from 'components/Cart';
 import { useState, useEffect, useRef } from 'react';
 import HamburgerToX from '@/components/HamburgerToX';
 import useOnClickOutside from '@/utils/useOnClickOutside';
+import Logo from 'components/ui/Logo';
 
 const Navbar = () => {
   const { user, subscription, isLoading } = useUser();
@@ -53,6 +54,9 @@ const Navbar = () => {
           <a className={linkClassName}>Sign in</a>
         </Link>
       )}
+      <Link href="/about-us">
+        <a className={linkClassName}>About Us</a>
+      </Link>
       <div className={linkClassName}>
         <Cart />
       </div>
@@ -67,7 +71,7 @@ const Navbar = () => {
             <div className="flex items-center pl-4">
               <Link href="/">
                 <a className={`w-12`} aria-label="Logo">
-                  <Image src={logoSvg} layout="responsive" priority />
+                  <Logo />
                 </a>
               </Link>
             </div>
@@ -88,7 +92,7 @@ const Navbar = () => {
               {links}
             </div>
 
-            <div className="hidden lg:flex space-x-2 items-center">{links}</div>
+            <div className="hidden md:flex space-x-2 items-center">{links}</div>
           </div>
         </div>
       </nav>

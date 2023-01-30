@@ -2,6 +2,7 @@ import { getAllPosts } from 'utils/markdown-helpers';
 import { serialize } from 'next-mdx-remote/serialize';
 import Image from 'next/image';
 import Link from 'next/link';
+import Seo from '@/components/SEO';
 
 import { BlogPostMetaData } from 'types';
 
@@ -33,13 +34,16 @@ const PostCard = ({ post }: { post: BlogPostMetaData }) => {
 
 export default function PostIndex({ posts, tags }: Props) {
   return (
-    <div>
-      <div className="grid grid-cols-1 gap-2 mx-2 lg:grid-cols-2">
-        {posts.map((post: BlogPostMetaData) => (
-          <PostCard key={post.title} post={post} />
-        ))}
+    <>
+      <Seo title="Blog" />
+      <div>
+        <div className="grid grid-cols-1 gap-2 mx-2 lg:grid-cols-2">
+          {posts.map((post: BlogPostMetaData) => (
+            <PostCard key={post.title} post={post} />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
