@@ -1,12 +1,13 @@
 import Pricing from 'components/Pricing';
 import { getActiveProductsWithPrices } from 'utils/supabase-client';
 import { GetStaticPropsResult } from 'next';
+import { Product } from 'types';
+
 interface Props {
-  products: any;
+  products: Product[];
 }
 
 export default function PricingPage({ products }: Props) {
-  // console.log(publicImages);
   return (
     <div>
       <Pricing products={products} />
@@ -22,7 +23,6 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
       props: {
         products
       }
-      // revalidate: 60
     };
   } else {
     return {

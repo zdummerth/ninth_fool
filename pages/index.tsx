@@ -10,13 +10,15 @@ import { getProducts } from '@/utils/callShopify';
 import ProductList from '@/components/ProductList';
 import Logo from 'components/ui/Logo';
 import Seo from '@/components/SEO';
+import { ShopifyProduct } from 'types';
 
 interface Props {
   publicImages: string[];
-  products: any;
+  products: ShopifyProduct[];
 }
 
 export default function HomePage({ publicImages, products }: Props) {
+  console.log('all products: ', products);
   const { user, subscription, isLoading } = useUser();
 
   const linkClassName =
@@ -118,17 +120,12 @@ export default function HomePage({ publicImages, products }: Props) {
   );
 }
 
-const H1 = ({ title }: any) => {
-  return <h1>{title}</h1>;
-};
-
 export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
   const { data } = await supabaseAdmin.storage.from('public-images').list('', {
     limit: 9,
     offset: 0
   });
   const allProducts = await getProducts({ first: 5 });
-  console.log('all products: ', allProducts);
 
   if (data) {
     const images = data

@@ -1,7 +1,7 @@
 import { useUser } from 'utils/useUser';
 import Image from 'next/image';
 import Link from 'next/link';
-import blackrose from 'public/color-forest.png';
+import forest from 'public/color-forest.png';
 import Seo from '@/components/SEO';
 
 export default function AboutPage() {
@@ -20,7 +20,7 @@ export default function AboutPage() {
         <div className="relative text-center rounded overflow-hidden py-20">
           <div className="absolute top-0 left-0 w-full h-full">
             <Image
-              src={blackrose}
+              src={forest}
               layout="fill"
               objectFit="cover"
               className=""

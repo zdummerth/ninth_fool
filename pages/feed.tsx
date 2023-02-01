@@ -5,17 +5,24 @@ import { useState } from 'react';
 import ImageList from '@/components/ImageList';
 import LoadingDots from '@/components/ui/LoadingDots';
 import { useRouter } from 'next/router';
-import SearchTags from '@/components/SearchTags';
 import SearchTagsAlt from '@/components/SearchTagsAlt';
 import { GetServerSidePropsContext } from 'next';
+import { ImagePageData } from 'types';
 
-export default function FeedPage(props: any) {
+interface Tag {
+  name: string;
+  label: string;
+  count: number;
+  value: string;
+}
+
+export default function FeedPage({ tags }: { tags: Tag[] }) {
   const router = useRouter();
   const [feedArgs, setFeedArgs] = useState({
     searchTerm: ''
   });
 
-  const getKey = (pageIndex: any, previousPageData: any) => {
+  const getKey = (pageIndex: number, previousPageData: ImagePageData) => {
     if (previousPageData && !previousPageData.images.length) return null; // reached the end
 
     return `/api/get-signed-urls?page=${pageIndex}${
@@ -44,23 +51,13 @@ export default function FeedPage(props: any) {
   const newdata = data ? data : [];
   const allImages = newdata.map((d) => d.images).flat();
 
-  console.log('image ', allImages[0]);
-
   return (
     <div className="p-2">
       <div className="hidden" id="top" />
       <div className="flex items-center p-4 w-full sticky top-0 bg-black z-20 transition-all duration-150">
-        {props.tags && (
-          // <SearchTags
-          //   counts={props.counts}
-          //   setTag={(t: any) => {
-          //     setFeedArgs({ searchTerm: t });
-          //     setSize(1);
-          //     router.push('#top');
-          //   }}
-          // />
+        {tags && (
           <SearchTagsAlt
-            tags={props.tags}
+            tags={tags}
             setTag={(t: any) => {
               setFeedArgs({ searchTerm: t });
               setSize(1);
@@ -98,7 +95,6 @@ export default function FeedPage(props: any) {
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   // Create authenticated Supabase Client
-
   const supabase = createServerSupabaseClient(ctx);
 
   const {
@@ -115,13 +111,16 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
 
   // Run queries with RLS on the server
-
   const { data, error } = await supabase
     .from('paid-images')
     .select('tagstring');
 
   if (error) {
-    console.log(error);
+    return {
+      props: {
+        tags: []
+      }
+    };
   }
 
   const tagsArray = data
@@ -143,7 +142,6 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
   return {
     props: {
-      counts: counts ?? [],
       tags: tags.length > 0 ? tags : []
     }
   };

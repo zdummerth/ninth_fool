@@ -85,4 +85,33 @@ export interface PaidImage {
   tagstring: string;
   height: number;
   width: number;
+  error: any;
+}
+
+export interface ImagePageData {
+  count: number;
+  images: PaidImage[];
+  statusText: string;
+}
+
+export interface ShopifyOption {
+  name: string;
+  values: string[];
+}
+
+export interface ShopifyImage {
+  altText?: string;
+  height: number;
+  width: number;
+  id: string;
+  src: string;
+}
+
+export interface ShopifyProduct {
+  id: string;
+  title: string;
+  handle: string;
+  tags: string[];
+  options: ShopifyOption[];
+  images: ShopifyImage[];
 }
