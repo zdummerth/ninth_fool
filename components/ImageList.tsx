@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useState } from 'react';
 interface Props {
   images: any;
-  showForm: boolean;
   setImage?: any;
 }
 import MasonryLayout from './Masonry';
@@ -26,11 +25,7 @@ const toBase64 = (str: string) =>
     ? Buffer.from(str).toString('base64')
     : window.btoa(str);
 
-export default function ImageList({
-  images,
-  showForm = false,
-  setImage
-}: Props) {
+export default function ImageList({ images, setImage }: Props) {
   const [enlargerImg, setEnlargedImg] = useState<any>(null);
   const handleImgChange = (action = 'next') => {
     const currentIndex = images.findIndex(
@@ -66,36 +61,6 @@ export default function ImageList({
               Next
             </button>
           </div>
-
-          {showForm ? (
-            <>
-              <div className="relative w-full h-1/2">
-                <Image
-                  src={enlargerImg.signedUrl}
-                  layout="fill"
-                  objectFit="contain"
-                  // width={enlargerImg.width}
-                  // height={enlargerImg.height}
-                  placeholder="blur"
-                  blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                    shimmer(enlargerImg.width, enlargerImg.height)
-                  )}`}
-                />
-              </div>
-            </>
-          ) : (
-            <Image
-              src={enlargerImg.signedUrl}
-              layout="fill"
-              objectFit="contain"
-              // width={enlargerImg.width}
-              // height={enlargerImg.height}
-              placeholder="blur"
-              blurDataURL={`data:image/svg+xml;base64,${toBase64(
-                shimmer(enlargerImg.width, enlargerImg.height)
-              )}`}
-            />
-          )}
         </div>
       )}
       <MasonryLayout>

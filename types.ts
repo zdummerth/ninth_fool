@@ -115,3 +115,10 @@ export interface ShopifyProduct {
   options: ShopifyOption[];
   images: ShopifyImage[];
 }
+
+export interface TagForSearch {
+  name: string;
+  label: string;
+  count: number;
+  value: string;
+}

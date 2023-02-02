@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { stripe } from './stripe';
 import { toDateTime } from './helpers';
-import { Customer, UserDetails, Price, Product } from 'types';
+import { Price, Product, PaidImage } from 'types';
 import type { Database } from 'types_db';
 import Stripe from 'stripe';
 
@@ -20,8 +20,8 @@ const getSignedUrls = async (searchTerm: string) => {
   console.log(data, error);
 };
 
-const getImageTags = async () => {
-  const { data, error } = await supabaseAdmin
+const getImageTags = async (supabaseClient: any) => {
+  const { data, error } = await supabaseClient
     .from('paid-images')
     .select('tagstring');
 
@@ -30,7 +30,11 @@ const getImageTags = async () => {
   }
 
   const tagsArray = data
-    ? data.map((t) => t.tagstring.split(',').map((t1: any) => t1.trim())).flat()
+    ? data
+        .map((t: PaidImage) =>
+          t.tagstring.split(',').map((t1: any) => t1.trim())
+        )
+        .flat()
     : [];
 
   const counts: any = {};
@@ -38,7 +42,14 @@ const getImageTags = async () => {
   for (const tag of tagsArray) {
     counts[tag] = counts[tag] ? counts[tag] + 1 : 1;
   }
-  return counts;
+
+  const tags = Object.keys(counts).map((t) => ({
+    name: t,
+    count: counts[t],
+    value: t,
+    label: `${t}  (${counts[t]})`
+  }));
+  return { tags: tags.length > 0 ? tags : [], counts };
 };
 
 const upsertProductRecord = async (product: Stripe.Product) => {

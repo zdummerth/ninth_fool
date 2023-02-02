@@ -44,13 +44,12 @@ export default function ImageList({ images }: Props) {
     }
   };
 
-  // console.log(images.map((i) => i.name));
   return (
     <div>
       <MasonryLayout>
         {images
           // .filter((img: PaidImage) => img.name !== '.emptyFolderPlaceholder')
-          .map((img: PaidImage, ind: number) => {
+          .map((img: PaidImage) => {
             return (
               <div key={img.signedUrl}>
                 <div

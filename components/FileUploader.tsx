@@ -74,7 +74,7 @@ export default function FileUploader() {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center border">
       <div className="mb-8">
         <label className="button primary block" htmlFor="single">
           {uploading ? 'Uploading ...' : 'Choose Image'}
