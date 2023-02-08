@@ -3,29 +3,30 @@ import Image from 'next/image';
 import Price from './Price';
 import { useCart } from '../context/CartContextProvider';
 import { toast } from 'react-toastify';
+import TrashIcon from './icons/Trash';
 
 export default function LineItem({ lineItem }) {
   // console.log(lineItem)
   const { removeCartItems, updateCartItem } = useCart();
   const [loading, setLoading] = useState(false);
 
-  // const handleSelectChange = async (e) => {
-  //   const qtyInt = parseInt(e.target.value);
-  //   try {
-  //     setLoading(true);
-  //     await updateCartItem([
-  //       {
-  //         id: lineItem.id,
-  //         merchandiseId: lineItem.merchandise.id,
-  //         quantity: qtyInt
-  //       }
-  //     ]);
-  //   } catch (e) {
-  //     console.log('error', e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const handleSelectChange = async (e) => {
+    const qtyInt = parseInt(e.target.value);
+    try {
+      setLoading(true);
+      await updateCartItem([
+        {
+          id: lineItem.id,
+          merchandiseId: lineItem.merchandise.id,
+          quantity: qtyInt
+        }
+      ]);
+    } catch (e) {
+      console.log('error', e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleDelete = async () => {
     try {
@@ -43,10 +44,10 @@ export default function LineItem({ lineItem }) {
 
   const { merchandise } = lineItem;
   const imgSrc = merchandise.image?.src;
-  // const availableForSaleArray = Array.from(Array(100).keys()).map((k) => k + 1);
+  const availableForSaleArray = Array.from(Array(100).keys()).map((k) => k + 1);
 
   return (
-    <div className="flex justify-between border rounded p-2">
+    <div className="relative flex justify-between border rounded p-2">
       <div className="flex">
         <div className="relative w-24 h-24 mr-2">
           {imgSrc ? (
@@ -64,13 +65,15 @@ export default function LineItem({ lineItem }) {
         </div>
       </div>
 
-      <div className="flex-col fai-fe fjc-sb">
-        <div className="flex fai-c mb-s">
-          <button onClick={handleDelete} disabled={loading}>
-            delete
-          </button>
-        </div>
-        {/* <div className="flex fai-c">
+      <div className="">
+        <button
+          onClick={handleDelete}
+          disabled={loading}
+          className="absolute top-3 right-3"
+        >
+          <TrashIcon />
+        </button>
+        <div className="absolute bottom-3 right-3">
           {loading ? (
             <div>...updating</div>
           ) : (
@@ -95,7 +98,7 @@ export default function LineItem({ lineItem }) {
               )}
             </>
           )}
-        </div> */}
+        </div>
       </div>
     </div>
   );

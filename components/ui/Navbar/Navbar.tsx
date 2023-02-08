@@ -2,8 +2,11 @@ import Link from 'next/link';
 import { useUser } from 'utils/useUser';
 import logoSvg from 'public/logo-white-2.png';
 import Image from 'next/image';
+import CartIcon from '@/components/icons/Cart';
 import { useRouter } from 'next/router';
 import Cart from 'components/Cart';
+import { useCart } from 'context/CartContextProvider';
+
 import { useState, useEffect, useRef } from 'react';
 import HamburgerToX from '@/components/HamburgerToX';
 import useOnClickOutside from '@/utils/useOnClickOutside';
@@ -11,6 +14,7 @@ import Logo from 'components/ui/Logo';
 
 const Navbar = () => {
   const { user, subscription, isLoading } = useUser();
+  const { cartLength } = useCart();
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const linkClassName =
@@ -57,9 +61,14 @@ const Navbar = () => {
       <Link href="/about-us">
         <a className={linkClassName}>About Us</a>
       </Link>
-      <div className={linkClassName}>
-        <Cart />
-      </div>
+      <Link href="/cart">
+        <a className={linkClassName}>
+          <span>
+            <CartIcon />
+          </span>
+          <span className="ml-2">{cartLength}</span>
+        </a>
+      </Link>
     </>
   );
 
@@ -85,7 +94,7 @@ const Navbar = () => {
             </button>
 
             <div
-              className={`flex flex-col fixed top-16 w-3/4 h-screen bg-black md:hidden transition-all ease-in-out duration-500 overflow-hidden ${
+              className={`flex flex-col fixed top-16 w-3/4 h-screen dark-gradient md:hidden transition-all ease-in-out duration-500 overflow-hidden ${
                 !isOpen ? '-right-full' : 'right-0'
               }`}
             >

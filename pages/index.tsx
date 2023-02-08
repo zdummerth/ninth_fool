@@ -54,7 +54,7 @@ export default function HomePage({ publicImages, products }: Props) {
           priority
         />
       </div>
-      <div className="py-20 relative z-10">
+      <div className=" relative z-10">
         <div className="relative text-center m-4 rounded overflow-hidden py-20">
           <div className="absolute top-0 left-0 w-full h-full -z-20 ">
             <Image
