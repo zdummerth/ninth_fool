@@ -82,21 +82,6 @@ export default function Account() {
               ? `You are currently on the ${subscription?.prices?.products?.name} plan.`
               : ''
           }
-          footer={
-            <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
-              <p className="pb-4 sm:pb-0">
-                Manage your subscription on Stripe.
-              </p>
-              <Button
-                variant="slim"
-                loading={loading}
-                disabled={loading || !subscription}
-                onClick={redirectToCustomerPortal}
-              >
-                Open customer portal
-              </Button>
-            </div>
-          }
         >
           <div className="text-xl mt-8 mb-4 font-semibold">
             {isLoading ? (
@@ -104,10 +89,29 @@ export default function Account() {
                 <LoadingDots />
               </div>
             ) : subscription ? (
-              `${subscriptionPrice}/${subscription?.prices?.interval}`
+              <div>
+                <div>
+                  {`${subscriptionPrice}/${subscription?.prices?.interval}`}
+                </div>
+                <div className="flex items-start justify-between flex-col sm:flex-row sm:items-center">
+                  <p className="pb-4 sm:pb-0">
+                    Manage your subscription on Stripe.
+                  </p>
+                  <Button
+                    variant="slim"
+                    loading={loading}
+                    disabled={loading}
+                    onClick={redirectToCustomerPortal}
+                  >
+                    Open customer portal
+                  </Button>
+                </div>
+              </div>
             ) : (
-              <Link href="/">
-                <a>Choose your plan</a>
+              <Link href="/pricing">
+                <a className="block p-2 my-8 w-64 rounded-xl text-center shadow shadow-white bg-emerald-500 color black">
+                  Choose your plan
+                </a>
               </Link>
             )}
           </div>

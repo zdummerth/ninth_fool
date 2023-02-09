@@ -1,7 +1,7 @@
 import { stripe } from 'utils/stripe';
 import { withApiAuth } from '@supabase/auth-helpers-nextjs';
 import { createOrRetrieveCustomer } from 'utils/supabase-admin';
-import { getURL } from 'utils/helpers';
+import { getURL, getSignInRedirectUrl } from 'utils/helpers';
 
 export default withApiAuth(async function createCheckoutSession(
   req,
@@ -37,8 +37,8 @@ export default withApiAuth(async function createCheckoutSession(
           trial_from_plan: true,
           metadata
         },
-        success_url: `${getURL()}/account`,
-        cancel_url: `${getURL()}/`
+        success_url: `${getSignInRedirectUrl()}/feed`,
+        cancel_url: `${getSignInRedirectUrl()}/`
       });
 
       return res.status(200).json({ sessionId: session.id });
