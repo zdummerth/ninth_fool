@@ -7,6 +7,13 @@ import type { Database } from 'types_db';
 
 export const supabase = createBrowserSupabaseClient<Database>();
 
+export const getSubscription = () =>
+  supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .single();
+
 export const getActiveProductsWithPrices = async (): Promise<
   ProductWithPrice[]
 > => {

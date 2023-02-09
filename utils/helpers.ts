@@ -10,6 +10,13 @@ export const getURL = () => {
   return url.includes('http') ? url : `https://${url}`;
 };
 
+export const isProduction = () => process.env.NODE_ENV === 'production';
+
+export const getSignInRedirectUrl = () => {
+  const url = isProduction() ? process.env.URL && '' : 'http://localhost:3000';
+  return url?.includes('http') ? url : `https://${url}`;
+};
+
 export const postData = async ({
   url,
   data

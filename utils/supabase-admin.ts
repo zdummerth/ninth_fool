@@ -52,6 +52,20 @@ const getImageTags = async (supabaseClient: any) => {
   return { tags: tags.length > 0 ? tags : [], counts };
 };
 
+export const getSubscription = async (supabaseClient: any) => {
+  const { data, error } = await supabaseClient
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .single();
+
+  if (error) {
+    return { error };
+  }
+
+  return { subscription: data };
+};
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,

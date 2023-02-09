@@ -1,7 +1,8 @@
 import Pricing from 'components/Pricing';
 import { getActiveProductsWithPrices } from 'utils/supabase-client';
-import { GetStaticPropsResult } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import { Product } from 'types';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 interface Props {
   products: Product[];
@@ -15,8 +16,22 @@ export default function PricingPage({ products }: Props) {
   );
 }
 
-export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
+export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   const products = await getActiveProductsWithPrices();
+
+  const supabase = createServerSupabaseClient(ctx);
+
+  const {
+    data: { session }
+  } = await supabase.auth.getSession();
+
+  if (!session)
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false
+      }
+    };
 
   if (products) {
     return {
@@ -31,4 +46,4 @@ export async function getStaticProps(): Promise<GetStaticPropsResult<Props>> {
       }
     };
   }
-}
+};

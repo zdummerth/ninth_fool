@@ -2,6 +2,8 @@ import { supabaseAdmin } from '@/utils/supabase-admin';
 import { GetStaticPropsResult } from 'next';
 import { useUser } from 'utils/useUser';
 import Image from 'next/image';
+import Button from 'components/ui/Button';
+
 import Link from 'next/link';
 import mobilebg from 'public/mobile-bg.png';
 import desktopbg from 'public/desktop-bg.png';

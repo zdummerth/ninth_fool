@@ -8,7 +8,7 @@ import GitHub from 'components/icons/GitHub';
 import Input from 'components/ui/Input';
 import LoadingDots from 'components/ui/LoadingDots';
 import { Provider } from '@supabase/supabase-js';
-import { getURL } from '@/utils/helpers';
+import { getURL, getSignInRedirectUrl } from '@/utils/helpers';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -39,7 +39,7 @@ const SignIn = () => {
     if (!password) {
       const res = await supabaseClient.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: getURL() }
+        options: { emailRedirectTo: getSignInRedirectUrl() }
       });
       error = res.error;
     } else {
