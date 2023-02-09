@@ -7,6 +7,7 @@ import {
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
 import { Readable } from 'node:stream';
+import { isProduction } from '@/utils/helpers';
 
 // Stripe requires the raw body to construct the event.
 export const config = {
@@ -38,9 +39,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const buf = await buffer(req);
     const sig = req.headers['stripe-signature'];
-    const webhookSecret =
-      process.env.STRIPE_WEBHOOK_SECRET_LIVE ??
-      process.env.STRIPE_WEBHOOK_SECRET;
+    const webhookSecret = isProduction()
+      ? process.env.STRIPE_WEBHOOK_SECRET_LIVE
+      : process.env.STRIPE_WEBHOOK_SECRET;
     let event: Stripe.Event;
 
     try {
