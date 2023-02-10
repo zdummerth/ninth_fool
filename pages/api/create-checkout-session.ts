@@ -15,7 +15,7 @@ export default withApiAuth(async function createCheckoutSession(
       const {
         data: { user }
       } = await supabaseServerClient.auth.getUser();
-      console.log('got user: ', user);
+      console.log('got user: ', user?.id);
 
       const customer = await createOrRetrieveCustomer({
         uuid: user?.id || '',
