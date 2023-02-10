@@ -123,8 +123,9 @@ const createOrRetrieveCustomer = async ({
         }
       };
     if (email) customerData.email = email;
+    console.log('stripe customer create input: ', customerData);
     const customer = await stripe.customers.create(customerData);
-    console.log('stripe customer: ', customer);
+    console.log('stripe customer create success: ', customer);
     // Now insert the customer ID into our Supabase mapping table.
     const { error: supabaseError } = await supabaseAdmin
       .from('customers')
