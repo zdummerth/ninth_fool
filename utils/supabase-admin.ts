@@ -124,15 +124,21 @@ const createOrRetrieveCustomer = async ({
       };
     if (email) customerData.email = email;
     console.log('stripe customer create input: ', customerData);
-    const customer = await stripe.customers.create(customerData);
-    console.log('stripe customer create success: ', customer);
-    // Now insert the customer ID into our Supabase mapping table.
-    const { error: supabaseError } = await supabaseAdmin
-      .from('customers')
-      .insert([{ id: uuid, stripe_customer_id: customer.id }]);
-    if (supabaseError) throw supabaseError;
-    console.log(`New customer created and inserted for ${uuid}.`);
-    return customer.id;
+    try {
+      const customer = await stripe.customers.create(customerData);
+
+      console.log('stripe customer create success: ', customer);
+      // Now insert the customer ID into our Supabase mapping table.
+      const { error: supabaseError } = await supabaseAdmin
+        .from('customers')
+        .insert([{ id: uuid, stripe_customer_id: customer.id }]);
+      if (supabaseError) throw supabaseError;
+      console.log(`New customer created and inserted for ${uuid}.`);
+      return customer.id;
+    } catch (e) {
+      console.log('stripe customer create error: ', e);
+    }
+    return '';
   }
   return data.stripe_customer_id;
 };
