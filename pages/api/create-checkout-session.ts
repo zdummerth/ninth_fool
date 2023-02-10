@@ -15,11 +15,13 @@ export default withApiAuth(async function createCheckoutSession(
       const {
         data: { user }
       } = await supabaseServerClient.auth.getUser();
+      console.log('got user: ');
 
       const customer = await createOrRetrieveCustomer({
         uuid: user?.id || '',
         email: user?.email || ''
       });
+      console.log('got customer: ');
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -40,6 +42,7 @@ export default withApiAuth(async function createCheckoutSession(
         success_url: `${getSignInRedirectUrl()}/feed`,
         cancel_url: `${getSignInRedirectUrl()}/`
       });
+      console.log('got session: ');
 
       return res.status(200).json({ sessionId: session.id });
     } catch (err: any) {
