@@ -2,7 +2,8 @@ import { stripe } from 'utils/stripe';
 import {
   upsertProductRecord,
   upsertPriceRecord,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  manageSubscriptionDelete
 } from 'utils/supabase-admin';
 import { NextApiRequest, NextApiResponse } from 'next';
 import Stripe from 'stripe';
@@ -63,28 +64,44 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           case 'price.updated':
             await upsertPriceRecord(event.data.object as Stripe.Price);
             break;
-          case 'customer.subscription.created':
-          case 'customer.subscription.updated':
-          case 'customer.subscription.deleted':
+          case 'customer.subscription.created': {
             const subscription = event.data.object as Stripe.Subscription;
             await manageSubscriptionStatusChange(
               subscription.id,
               subscription.customer as string,
-              event.type === 'customer.subscription.created'
+              true
             );
             break;
-          case 'checkout.session.completed':
-            const checkoutSession = event.data
-              .object as Stripe.Checkout.Session;
-            if (checkoutSession.mode === 'subscription') {
-              const subscriptionId = checkoutSession.subscription;
-              await manageSubscriptionStatusChange(
-                subscriptionId as string,
-                checkoutSession.customer as string,
-                true
-              );
-            }
+          }
+          case 'customer.subscription.updated': {
+            const subscription = event.data.object as Stripe.Subscription;
+            await manageSubscriptionStatusChange(
+              subscription.id,
+              subscription.customer as string,
+              false
+            );
             break;
+          }
+          case 'customer.subscription.deleted': {
+            const subscription = event.data.object as Stripe.Subscription;
+            await manageSubscriptionDelete(
+              subscription.id,
+              subscription.customer as string
+            );
+            break;
+          }
+          case 'checkout.session.completed':
+          // const checkoutSession = event.data
+          //   .object as Stripe.Checkout.Session;
+          // if (checkoutSession.mode === 'subscription') {
+          //   const subscriptionId = checkoutSession.subscription;
+          //   await manageSubscriptionStatusChange(
+          //     subscriptionId as string,
+          //     checkoutSession.customer as string,
+          //     true
+          //   );
+          // }
+          // break;
           default:
             throw new Error('Unhandled relevant event!');
         }

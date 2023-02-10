@@ -229,11 +229,36 @@ const manageSubscriptionStatusChange = async (
     );
 };
 
+const manageSubscriptionDelete = async (
+  subscriptionId: string,
+  customerId: string
+) => {
+  // Get customer's UUID from mapping table.
+  const { data: customerData, error: noCustomerError } = await supabaseAdmin
+    .from('customers')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .single();
+  if (noCustomerError) throw noCustomerError;
+
+  const { id: uuid } = customerData!;
+
+  const { error } = await supabaseAdmin
+    .from('subscriptions')
+    .delete()
+    .eq('id', subscriptionId);
+  if (error) throw error;
+  console.log(
+    `error deleting subscription [${subscriptionId}] for user [${uuid}]`
+  );
+};
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
+  manageSubscriptionDelete,
   getImageTags,
   supabaseAdmin
 };
