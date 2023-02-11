@@ -36,6 +36,17 @@ const relevantEvents = new Set([
   'customer.subscription.deleted'
 ]);
 
+// const checkoutSession = event.data.object as Stripe.Checkout.Session;
+// if (checkoutSession.mode === 'subscription') {
+//   const subscriptionId = checkoutSession.subscription;
+//   await manageSubscriptionStatusChange(
+//     subscriptionId as string,
+//     checkoutSession.customer as string,
+//     true
+//   );
+// }
+// break;
+
 const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const buf = await buffer(req);
@@ -89,19 +100,8 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             break;
           }
           case 'checkout.session.completed':
-          // const checkoutSession = event.data
-          //   .object as Stripe.Checkout.Session;
-          // if (checkoutSession.mode === 'subscription') {
-          //   const subscriptionId = checkoutSession.subscription;
-          //   await manageSubscriptionStatusChange(
-          //     subscriptionId as string,
-          //     checkoutSession.customer as string,
-          //     true
-          //   );
-          // }
-          // break;
           default:
-            throw new Error('Unhandled relevant event!');
+            throw new Error(`Unhandled relevant event! ${event.type}`);
         }
       } catch (error) {
         console.log(error);
