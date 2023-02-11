@@ -26,11 +26,8 @@ async function buffer(readable: Readable) {
 }
 
 const relevantEvents = new Set([
-  'product.created',
   'product.updated',
-  'price.created',
   'price.updated',
-  'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted'
@@ -65,11 +62,9 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (relevantEvents.has(event.type)) {
       try {
         switch (event.type) {
-          case 'product.created':
           case 'product.updated':
             await upsertProductRecord(event.data.object as Stripe.Product);
             break;
-          case 'price.created':
           case 'price.updated':
             await upsertPriceRecord(event.data.object as Stripe.Price);
             break;
@@ -99,7 +94,6 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             );
             break;
           }
-          case 'checkout.session.completed':
           default:
             throw new Error(`Unhandled relevant event! ${event.type}`);
         }
