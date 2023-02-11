@@ -32,10 +32,11 @@ export default function Pricing({ products }: Props) {
 
     try {
       const { sessionId } = await postData({
-        url: '/api/create-checkout-session',
+        url: '/api/create-checkout-session-test',
         data: { price }
       });
 
+      console.log({ sessionId });
       const stripe = await getStripe();
       stripe?.redirectToCheckout({ sessionId });
     } catch (error) {
