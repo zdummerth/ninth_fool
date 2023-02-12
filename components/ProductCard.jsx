@@ -11,8 +11,7 @@ const LineItem = ({ image, name }) => {
         <Image src={image.src} alt={'test'} layout="fill" objectFit="contain" />
       </div>
       <div className="flex flex-col items-center">
-        <div>{`${name}`}</div>
-        <div>added to cart</div>
+        <div>{`${name} Successfully Added To Cart`}</div>
       </div>
     </div>
   );
@@ -76,15 +75,10 @@ const VariantPicker = ({
         await addToCart([{ quantity, merchandiseId: currentVariant.id }]);
         toast.success(
           <div className="">
-            <LineItem
-              image={currentVariant.image}
-              name={`${product.title} - ${
-                currentVariant.title !== 'Default Title' && currentVariant.title
-              }`}
-            />
+            <LineItem image={currentVariant.image} name={product.title} />
           </div>,
           {
-            autoClose: 2000,
+            autoClose: 1000,
             closeOnClick: true
           }
         );
@@ -153,7 +147,7 @@ const VariantPicker = ({
               type="submit"
               name="add_to_cart"
               id="add-to-cart"
-              className="p-2 border w-full mt-4 rounded bg-emerald-400 text-black font-bold shadow shadow-white"
+              className="p-2 border w-full mt-4 rounded bg-white text-black font-bold shadow shadow-black hover:bg-gray-600 hover:text-white"
               onClick={handleSubmit}
               disabled={isLoading.adding || isLoading.buying}
             >
@@ -234,12 +228,14 @@ const Product = ({ product, recommendedProducts }) => {
             objectFit="contain"
           />
         </div>
-        <Thumbnails
-          images={images}
-          variants={variants}
-          setCurrentImage={setCurrentImage}
-          setCurrentVariant={setCurrentVariant}
-        />
+        <div className="flex justify-center">
+          <Thumbnails
+            images={images}
+            variants={variants}
+            setCurrentImage={setCurrentImage}
+            setCurrentVariant={setCurrentVariant}
+          />
+        </div>
       </div>
 
       <div className="p-2 w-full max-w-md place-self-center">

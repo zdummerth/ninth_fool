@@ -2,9 +2,7 @@ import { supabaseAdmin } from '@/utils/supabase-admin';
 import { GetStaticPropsResult } from 'next';
 import { useUser } from 'utils/useUser';
 import Image from 'next/image';
-import Button from 'components/ui/Button';
-
-import Link from 'next/link';
+import InternalLink from '@/components/ui/InternalLink';
 import mobilebg from 'public/mobile-bg.png';
 import desktopbg from 'public/desktop-bg.png';
 import blackrose from 'public/brose.png';
@@ -24,7 +22,7 @@ export default function HomePage({ publicImages, products }: Props) {
   const { user, subscription, isLoading } = useUser();
 
   const linkClassName =
-    'block p-2 my-8 w-64 rounded-xl text-center shadow shadow-white bg-emerald-500 color black';
+    'block p-2 my-8 rounded-full text-center shadow shadow-black bg-white hover:bg-gray-600 hover:text-white text-black font-semibold';
 
   const description = `Unleash your inner artist and transform your space with endless
             possibilities of art! With The Ninth Fool, you can have access to a
@@ -75,7 +73,7 @@ export default function HomePage({ publicImages, products }: Props) {
           </h2>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mx-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mx-4">
           {publicImages.map((i: string) => {
             return (
               <div
@@ -87,35 +85,37 @@ export default function HomePage({ publicImages, products }: Props) {
             );
           })}
         </div>
-
-        <div className="flex flex-col items-center text-center dark-gradient rounded py-10 m-2">
-          <div className="relative w-48">
+        <div className="flex flex-col md:flex-row md:justify-center items-center text-center dark-gradient rounded py-10 px-4 mx-2 my-20">
+          <div className="relative w-48 md:w-80">
             <Logo />
           </div>
-          <p className="text-xl max-w-xl mx-auto mt-10">{description}</p>
-          <div className="flex justify-center">
-            {user && subscription && !isLoading && (
-              <Link href="/feed">
-                <a className={linkClassName}>View More Images</a>
-              </Link>
-            )}
-            {user && !subscription && !isLoading && (
-              <Link href="/pricing">
-                <a className={linkClassName}>Subscribe Now</a>
-              </Link>
-            )}
-            {!user && !isLoading && (
-              <Link href="/signin">
-                <a className={linkClassName}>Sign Up Now</a>
-              </Link>
-            )}
+          <div className="flex-1 max-w-xl md:pl-20">
+            <p className="text-xl mt-10">{description}</p>
+            <div className="flex justify-center">
+              {user && subscription && !isLoading && (
+                <InternalLink href="/feed" variation="pill">
+                  View More Images
+                </InternalLink>
+              )}
+              {user && !subscription && !isLoading && (
+                <InternalLink href="/pricing" variation="pill">
+                  Subscribe Now
+                </InternalLink>
+              )}
+              {!user && !isLoading && (
+                <InternalLink href="/signin" variation="pill">
+                  Sign Up Now
+                </InternalLink>
+              )}
+            </div>
           </div>
         </div>
+
         <div className="text-center dark-gradient rounded py-10 m-2">
           <h2 className="text-xl">Featured Downloads</h2>
         </div>
         <div className="mx-2">
-          <ProductList products={products} />
+          <ProductList products={products} variation="standard" />
         </div>
       </div>
     </>

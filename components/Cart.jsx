@@ -24,7 +24,7 @@ export default function CartComponent() {
         </div>
         <a
           href={checkoutUrl}
-          className="block border rounded p-2 text-center my-6 bg-green-300 text-black text-xl font-medium"
+          className="block rounded p-2 my-6 text-center shadow shadow-black bg-white hover:bg-gray-600 hover:text-white text-black font-semibold"
         >
           Proceed to Checkout
         </a>

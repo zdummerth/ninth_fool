@@ -1,8 +1,6 @@
-import cn from 'classnames';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-import Button from 'components/ui/Button';
 import { postData } from 'utils/helpers';
 import { getStripe } from 'utils/stripe-client';
 import { useUser } from 'utils/useUser';
@@ -15,6 +13,7 @@ interface Props {
 type BillingInterval = 'year' | 'month';
 
 export default function Pricing({ products }: Props) {
+  console.log(products);
   const router = useRouter();
   const [billingInterval, setBillingInterval] =
     useState<BillingInterval>('month');
@@ -32,7 +31,7 @@ export default function Pricing({ products }: Props) {
 
     try {
       const { sessionId } = await postData({
-        url: '/api/create-checkout-session-test',
+        url: '/api/create-checkout-session',
         data: { price }
       });
 
@@ -79,7 +78,7 @@ export default function Pricing({ products }: Props) {
           </p>
           <div className="relative self-center mt-6 bg-zinc-900 rounded-lg p-0.5 flex sm:mt-8 border border-zinc-800"></div>
         </div>
-        <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0 xl:grid-cols-4">
+        <div className="mt-8 max-w-xl m-auto">
           {products.map((product) => {
             const price = product?.prices?.find(
               (price) => price.interval === billingInterval
@@ -93,19 +92,15 @@ export default function Pricing({ products }: Props) {
             return (
               <div
                 key={product.id}
-                className={cn(
-                  'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900',
-                  {
-                    'border border-pink-500': subscription
-                      ? product.name === subscription?.prices?.products?.name
-                      : product.name === 'Freelancer'
-                  }
-                )}
+                className={
+                  'rounded-lg shadow-sm divide-y divide-zinc-600 bg-zinc-900'
+                }
               >
-                <div className="p-4">
-                  {/* <h2 className="text-2xl leading-6 font-semibold text-white">
+                <div className="p-4 text-center">
+                  <h2 className="text-2xl leading-6 font-semibold text-white">
                     {product.name}
-                  </h2> */}
+                  </h2>
+                  <p className="my-6">{product.description}</p>
                   <div className="">
                     <span className="text-5xl font-extrabold white">
                       {priceString}
@@ -114,74 +109,20 @@ export default function Pricing({ products }: Props) {
                       /{price.interval}
                     </span>
                   </div>
-                  <Button
-                    variant="slim"
-                    type="button"
+
+                  <button
                     disabled={isLoading}
-                    loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
-                    className="mt-8 block w-full rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-zinc-900"
+                    className="mt-8 py-2 block w-full rounded-full text-center shadow shadow-black bg-white hover:bg-gray-600 hover:text-white text-black font-semibold"
                   >
                     {product.name === subscription?.prices?.products?.name
                       ? 'Manage'
                       : 'Subscribe'}
-                  </Button>
+                  </button>
                 </div>
               </div>
             );
           })}
-        </div>
-        <div>
-          <p className="mt-24 text-xs uppercase text-zinc-400 text-center font-bold tracking-[0.3em]">
-            Brought to you by
-          </p>
-          <div className="flex flex-col items-center my-12 space-y-4 sm:mt-8 sm:space-y-0 md:mx-auto md:max-w-2xl sm:grid sm:gap-6 sm:grid-cols-5">
-            <div className="flex items-center justify-start">
-              <a href="https://nextjs.org" aria-label="Next.js Link">
-                <img
-                  src="/nextjs.svg"
-                  alt="Next.js Logo"
-                  className="h-12 text-white"
-                />
-              </a>
-            </div>
-            <div className="flex items-center justify-start">
-              <a href="https://vercel.com" aria-label="Vercel.com Link">
-                <img
-                  src="/vercel.svg"
-                  alt="Vercel.com Logo"
-                  className="h-6 text-white"
-                />
-              </a>
-            </div>
-            <div className="flex items-center justify-start">
-              <a href="https://stripe.com" aria-label="stripe.com Link">
-                <img
-                  src="/stripe.svg"
-                  alt="stripe.com Logo"
-                  className="h-12 text-white"
-                />
-              </a>
-            </div>
-            <div className="flex items-center justify-start">
-              <a href="https://supabase.io" aria-label="supabase.io Link">
-                <img
-                  src="/supabase.svg"
-                  alt="supabase.io Logo"
-                  className="h-10 text-white"
-                />
-              </a>
-            </div>
-            <div className="flex items-center justify-start">
-              <a href="https://github.com" aria-label="github.com Link">
-                <img
-                  src="/github.svg"
-                  alt="github.com Logo"
-                  className="h-8 text-white"
-                />
-              </a>
-            </div>
-          </div>
         </div>
       </div>
     </section>

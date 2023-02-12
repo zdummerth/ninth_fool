@@ -3,6 +3,7 @@ import { useState, ReactNode } from 'react';
 
 import LoadingDots from 'components/ui/LoadingDots';
 import Button from 'components/ui/Button';
+import InternalLink from '@/components/ui/InternalLink';
 import { useUser } from 'utils/useUser';
 import { postData } from 'utils/helpers';
 
@@ -63,7 +64,7 @@ export default function Account() {
     }).format((subscription?.prices?.unit_amount || 0) / 100);
 
   return (
-    <section className="mb-32 max-w-3xl mx-auto px-4">
+    <section className="pb-20 max-w-3xl mx-auto px-4">
       <div className=" pt-8 sm:pt-24 pb-8 px-4 lg:px-8">
         <div className="sm:flex sm:flex-col sm:align-center">
           <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
@@ -97,30 +98,19 @@ export default function Account() {
                   <p className="pb-4 sm:pb-0">
                     Manage your subscription on Stripe.
                   </p>
-                  <Button
-                    variant="slim"
-                    loading={loading}
-                    disabled={loading}
-                    onClick={redirectToCustomerPortal}
-                  >
+                  <button disabled={loading} onClick={redirectToCustomerPortal}>
                     Open customer portal
-                  </Button>
+                  </button>
                 </div>
               </div>
             ) : (
-              <Link href="/pricing">
-                <a className="block p-2 my-8 w-64 rounded-xl text-center shadow shadow-white bg-emerald-500 color black">
-                  Choose your plan
-                </a>
-              </Link>
+              <InternalLink href="/pricing" variation="pill">
+                Choose your plan
+              </InternalLink>
             )}
           </div>
         </Card>
-        <Card
-          title="Your Email"
-          // description="Please enter the email address you want to use to login."
-          // footer={<p>We will email you to verify the change.</p>}
-        >
+        <Card title="Your Email">
           <p className="text-xl mt-8 mb-4 font-semibold">
             {user ? user.email : undefined}
           </p>

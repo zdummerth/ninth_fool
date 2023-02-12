@@ -1,7 +1,7 @@
 import { stripe } from 'utils/stripe';
 import { withApiAuth } from '@supabase/auth-helpers-nextjs';
 import { createOrRetrieveCustomer } from 'utils/supabase-admin';
-import { getURL, getSignInRedirectUrl } from 'utils/helpers';
+import { getSignInRedirectUrl } from 'utils/helpers';
 
 export default withApiAuth(async function createCheckoutSession(
   req,
@@ -12,6 +12,7 @@ export default withApiAuth(async function createCheckoutSession(
     const { price, quantity = 1, metadata = {} } = req.body;
 
     try {
+      // console.log('tessting api route: ', req.body);
       const {
         data: { user }
       } = await supabaseServerClient.auth.getUser();
@@ -21,10 +22,9 @@ export default withApiAuth(async function createCheckoutSession(
         uuid: user?.id || '',
         email: user?.email || ''
       });
-      console.log('got customer: ', customer);
 
       const session = await stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
+        // payment_method_types: ['card'],
         billing_address_collection: 'required',
         customer,
         line_items: [
