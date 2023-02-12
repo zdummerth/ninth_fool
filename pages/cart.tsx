@@ -21,7 +21,7 @@ export default function CartPage({ products }: Props) {
             <p className="py-10">Your Cart Is Empty</p>
             <p className="pb-10">Check Out These Products</p>
             <div className="mx-2">
-              <ProductList products={products} />
+              <ProductList products={products} variation="standard" />
             </div>
           </div>
         )}
