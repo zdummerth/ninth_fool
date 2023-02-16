@@ -12,7 +12,6 @@ const Seo = ({
     <Head>
       <title>{`The Ninth Fool | ${title}`}</title>
       <meta name="description" content={description} />
-      <link rel="icon" href="/favicon.ico" />
     </Head>
   );
 };

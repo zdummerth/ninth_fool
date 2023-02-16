@@ -46,6 +46,9 @@ const Navbar = () => {
           <a className={linkClassName}>Feed</a>
         </Link>
       ) : null}
+      <Link href="/shop">
+        <a className={linkClassName}>Shop</a>
+      </Link>
       <Link href="/blog">
         <a className={linkClassName}>Blog</a>
       </Link>

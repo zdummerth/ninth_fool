@@ -98,7 +98,11 @@ export default function Account() {
                   <p className="pb-4 sm:pb-0">
                     Manage your subscription on Stripe.
                   </p>
-                  <button disabled={loading} onClick={redirectToCustomerPortal}>
+                  <button
+                    className="pt-2 pb-3 px-4 rounded-full text-center shadow shadow-black bg-white hover:bg-gray-600 hover:text-white text-black font-semibold"
+                    disabled={loading}
+                    onClick={redirectToCustomerPortal}
+                  >
                     Open customer portal
                   </button>
                 </div>

@@ -18,7 +18,6 @@ interface Props {
 }
 
 export default function HomePage({ publicImages, products }: Props) {
-  console.log('all products: ', products);
   const { user, subscription, isLoading } = useUser();
 
   const linkClassName =
