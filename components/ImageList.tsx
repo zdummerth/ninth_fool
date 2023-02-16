@@ -5,6 +5,39 @@ interface Props {
   setImage?: any;
 }
 import MasonryLayout from './Masonry';
+import DownloadIcon from './icons/Download';
+import { downloadPaidImage } from '@/utils/supabase-client';
+import LoadingDots from './ui/LoadingDots';
+
+const DownloadButton = ({ path }: { path: string }) => {
+  const [loading, setIsLoading] = useState(false);
+  const handleDownload = async () => {
+    setIsLoading(true);
+    try {
+      if (!document) return;
+      const blob = await downloadPaidImage(path);
+      if (blob) {
+        const blobUrl = URL.createObjectURL(blob);
+        let tempLink = document.createElement('a');
+        tempLink.href = blobUrl;
+        tempLink.setAttribute('download', path);
+        tempLink.click();
+      } else {
+        throw new Error('Blob is null');
+      }
+    } catch (e) {
+      alert('Error Downloading Image');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <button className="ml-5" onClick={handleDownload}>
+      {loading ? <LoadingDots /> : <DownloadIcon />}
+    </button>
+  );
+};
 
 const shimmer = (w: number, h: number) => `
 <svg width="${w}" height="${h}" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
@@ -27,6 +60,7 @@ const toBase64 = (str: string) =>
 
 export default function ImageList({ images, setImage }: Props) {
   const [enlargerImg, setEnlargedImg] = useState<any>(null);
+  // console.log(enlargerImg);
   const handleImgChange = (action = 'next') => {
     const currentIndex = images.findIndex(
       (img: any) => img.signedUrl === enlargerImg.signedUrl
@@ -50,7 +84,19 @@ export default function ImageList({ images, setImage }: Props) {
     <div>
       {enlargerImg && (
         <div className="fixed w-screen h-screen left-0 top-0 z-50 bg-black">
-          <div className="absolute bottom-10 z-20 flex justify-center w-full bg-black/50">
+          <div className="relative w-full h-full">
+            <Image
+              src={enlargerImg.signedUrl}
+              layout="fill"
+              objectFit="contain"
+              placeholder="blur"
+              blurDataURL={`data:image/svg+xml;base64,${toBase64(
+                shimmer(enlargerImg.width, enlargerImg.height)
+              )}`}
+            />
+          </div>
+
+          <div className="absolute bottom-10 z-20 flex justify-center w-full bg-black/70">
             <button className="mx-2" onClick={() => handleImgChange('prev')}>
               Prev
             </button>
@@ -60,6 +106,7 @@ export default function ImageList({ images, setImage }: Props) {
             <button className="mx-2" onClick={() => handleImgChange('next')}>
               Next
             </button>
+            <DownloadButton path={enlargerImg.path} />
           </div>
         </div>
       )}

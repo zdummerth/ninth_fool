@@ -43,7 +43,7 @@ export default withApiAuth(async function ProtectedRoute(req, res, supabase) {
 
   const { data: urls, error: urlError } = await supabase.storage
     .from('paid-images')
-    .createSignedUrls(filepaths, 600);
+    .createSignedUrls(filepaths, 60 * 60);
 
   if (urlError) {
     return res.json(urlError);

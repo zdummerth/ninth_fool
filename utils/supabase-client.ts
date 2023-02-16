@@ -46,3 +46,12 @@ export const getImageTags = async () => {
   const imagesTags = await supabase.from('paid-images').select('tags');
   console.log(imagesTags);
 };
+
+export const downloadPaidImage = async (path: string) => {
+  const { data, error } = await supabase.storage
+    .from('paid-images')
+    .download(path);
+
+  if (error) throw error;
+  return data;
+};

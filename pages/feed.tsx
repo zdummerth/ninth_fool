@@ -1,25 +1,15 @@
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { GetServerSidePropsContext } from 'next';
 import { getImageTags } from '@/utils/supabase-admin';
-import { TagForSearch, Subscription } from 'types';
+import { TagForSearch } from 'types';
 import PaginatedImages from '@/components/PaginatedImages';
-import { useUser } from 'utils/useUser';
 import { getSubscription } from '@/utils/supabase-admin';
 
-export default function FeedPage({
-  tags,
-  subsciption
-}: {
+interface Props {
   tags: TagForSearch[];
-  subsciption: Subscription;
-}) {
-  const { hasSubscription } = useUser();
-  console.log(hasSubscription);
-  return (
-    <div className="">
-      <PaginatedImages tags={tags} showForm={false} />
-    </div>
-  );
+}
+export default function FeedPage({ tags }: Props) {
+  return <PaginatedImages tags={tags} showForm={false} />;
 }
 
 export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
@@ -41,7 +31,7 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     const { subscription, error } = await getSubscription(supabase);
 
-    if (error)
+    if (error || !subscription)
       return {
         redirect: {
           destination: '/pricing',
@@ -52,15 +42,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
 
     return {
       props: {
-        tags,
-        subscription
+        tags
       }
     };
   } catch (e) {
     return {
       props: {
-        tags: [],
-        subscription: null
+        tags: []
       }
     };
   }

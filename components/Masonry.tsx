@@ -7,8 +7,8 @@ export default function MasonryLayout({ children }: any) {
         default: 4,
         1100: 4,
         900: 3,
-        700: 2,
-        500: 1
+        // 700: 2,
+        500: 2
       }}
       className="flex ml-[-5px]"
       columnClassName="pl-[5px]"
