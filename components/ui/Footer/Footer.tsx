@@ -1,5 +1,5 @@
-import Link from 'next/link';
 import Logo from 'components/ui/Logo';
+import InternalLink from '../InternalLink';
 
 export default function Footer() {
   return (
@@ -13,18 +13,19 @@ export default function Footer() {
               </p>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
-              <Link href="/">
-                <a className="text-white hover:text-zinc-200 transition ease-in-out duration-150">
-                  Home
-                </a>
-              </Link>
+              <InternalLink href="/" variation="simple">
+                Home
+              </InternalLink>
             </li>
             <li className="py-3 md:py-0 md:pb-4">
-              <Link href="/blog">
-                <a className="text-white hover:text-zinc-200 transition ease-in-out duration-150">
-                  Blog
-                </a>
-              </Link>
+              <InternalLink href="/shop" variation="simple">
+                Shop
+              </InternalLink>
+            </li>
+            <li className="py-3 md:py-0 md:pb-4">
+              <InternalLink href="/blog" variation="simple">
+                Blog
+              </InternalLink>
             </li>
           </ul>
         </div>

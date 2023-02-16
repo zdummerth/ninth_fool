@@ -4,6 +4,7 @@ import Price from './Price';
 import { useCart } from '../context/CartContextProvider';
 import { toast } from 'react-toastify';
 import TrashIcon from './icons/Trash';
+import LoadingDots from './ui/LoadingDots';
 
 export default function LineItem({ lineItem }) {
   // console.log(lineItem)
@@ -44,7 +45,7 @@ export default function LineItem({ lineItem }) {
 
   const { merchandise } = lineItem;
   const imgSrc = merchandise.image?.src;
-  const availableForSaleArray = Array.from(Array(100).keys()).map((k) => k + 1);
+  const availableForSaleArray = Array.from(Array(10).keys()).map((k) => k + 1);
 
   return (
     <div className="relative flex justify-between border rounded p-2">
@@ -56,8 +57,14 @@ export default function LineItem({ lineItem }) {
             <div>No image uploaded</div>
           )}
         </div>
-        <div className="flex-col fai-fs">
-          <div>{merchandise.product.title}</div>
+        <div className="flex-col">
+          <div className="flex">
+            <div className="pr-4">{merchandise.product.title}</div>
+
+            <button onClick={handleDelete} disabled={loading} className="">
+              <TrashIcon />
+            </button>
+          </div>
           {/* <div className="font-size-sm">{merchandise.title}</div> */}
           <div>
             <Price price={merchandise.priceV2.amount} />
@@ -66,16 +73,9 @@ export default function LineItem({ lineItem }) {
       </div>
 
       <div className="">
-        <button
-          onClick={handleDelete}
-          disabled={loading}
-          className="absolute top-3 right-3"
-        >
-          <TrashIcon />
-        </button>
         <div className="absolute bottom-3 right-3">
           {loading ? (
-            <div>...updating</div>
+            <LoadingDots />
           ) : (
             <>
               {lineItem.merchandise.availableForSale && (
