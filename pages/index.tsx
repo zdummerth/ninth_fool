@@ -91,7 +91,7 @@ export default function HomePage({ publicImages, products }: Props) {
           <div className="flex-1 max-w-xl md:pl-20">
             <p className="text-xl mt-10">{description}</p>
             <div className="flex justify-center">
-              {user && subscription && !isLoading && (
+              {/* {user && subscription && !isLoading && (
                 <InternalLink href="/feed" variation="pill">
                   View More Images
                 </InternalLink>
@@ -105,7 +105,11 @@ export default function HomePage({ publicImages, products }: Props) {
                 <InternalLink href="/signin" variation="pill">
                   Sign Up Now
                 </InternalLink>
-              )}
+              )} */}
+
+              <InternalLink href="/feed" variation="pill">
+                View More Images
+              </InternalLink>
             </div>
           </div>
         </div>

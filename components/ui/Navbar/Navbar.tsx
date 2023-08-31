@@ -1,10 +1,7 @@
 import Link from 'next/link';
 import { useUser } from 'utils/useUser';
-import logoSvg from 'public/logo-white-2.png';
-import Image from 'next/image';
 import CartIcon from '@/components/icons/Cart';
 import { useRouter } from 'next/router';
-import Cart from 'components/Cart';
 import { useCart } from 'context/CartContextProvider';
 
 import { useState, useEffect, useRef } from 'react';
@@ -37,7 +34,7 @@ const Navbar = () => {
 
   const links = (
     <>
-      {user && !subscription && !isLoading ? (
+      {/* {user && !subscription && !isLoading ? (
         <Link href="/pricing">
           <a className={linkClassName}>Subscribe</a>
         </Link>
@@ -45,7 +42,10 @@ const Navbar = () => {
         <Link href="/feed">
           <a className={linkClassName}>Feed</a>
         </Link>
-      ) : null}
+      ) : null} */}
+      <Link href="/feed">
+        <a className={linkClassName}>Feed</a>
+      </Link>
       <Link href="/shop">
         <a className={linkClassName}>Shop</a>
       </Link>
