@@ -88,6 +88,7 @@ export default function ImageList({ images, setImage }: Props) {
             <Image
               src={enlargerImg.signedUrl}
               layout="fill"
+              sizes="(max-width: 568px) 50vw, (max-width: 768px) 33vw, (max-width: 1200px) 25vw"
               objectFit="contain"
               placeholder="blur"
               blurDataURL={`data:image/svg+xml;base64,${toBase64(
