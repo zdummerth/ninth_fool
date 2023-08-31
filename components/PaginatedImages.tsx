@@ -23,7 +23,8 @@ export default function PaginatedImages({
   const getKey = (pageIndex: number, previousPageData: ImagePageData) => {
     if (previousPageData && !previousPageData.images.length) return null; // reached the end
 
-    return `/api/get-signed-urls?page=${pageIndex}${
+    // calls the admin route for demo purposes
+    return `/api/get-signed-urls-admin?page=${pageIndex}${
       feedArgs.searchTerm ? `&searchTerm=${feedArgs.searchTerm}` : ''
     }`;
   };

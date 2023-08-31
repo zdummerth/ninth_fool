@@ -20,10 +20,9 @@ const getSignedUrls = async (searchTerm: string) => {
   console.log(data, error);
 };
 
-const getImageTags = async (supabaseClient: any) => {
-  const { data, error } = await supabaseClient
-    .from('paid-images')
-    .select('tagstring');
+const getImageTags = async (supabaseClient: any, useAdmin?: boolean) => {
+  const client = useAdmin ? supabaseAdmin : supabaseClient;
+  const { data, error } = await client.from('paid-images').select('tagstring');
 
   if (error) {
     throw error;

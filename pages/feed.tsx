@@ -17,28 +17,30 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
   try {
     const supabase = createServerSupabaseClient(ctx);
 
-    const {
-      data: { session }
-    } = await supabase.auth.getSession();
+    // Removed subscription and session check for now to allow all users to view feed
 
-    if (!session)
-      return {
-        redirect: {
-          destination: '/signin',
-          permanent: false
-        }
-      };
+    // const {
+    //   data: { session }
+    // } = await supabase.auth.getSession();
 
-    const { subscription, error } = await getSubscription(supabase);
+    // if (!session)
+    //   return {
+    //     redirect: {
+    //       destination: '/signin',
+    //       permanent: false
+    //     }
+    //   };
 
-    if (error || !subscription)
-      return {
-        redirect: {
-          destination: '/pricing',
-          permanent: false
-        }
-      };
-    const { tags } = await getImageTags(supabase);
+    // const { subscription, error } = await getSubscription(supabase);
+
+    // if (error || !subscription)
+    //   return {
+    //     redirect: {
+    //       destination: '/pricing',
+    //       permanent: false
+    //     }
+    //   };
+    const { tags } = await getImageTags(supabase, true);
 
     return {
       props: {
